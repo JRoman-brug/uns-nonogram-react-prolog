@@ -1,58 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: sans-serif;
-  margin: 20px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
   padding: 0;
+  margin: 0;
 }
-
-.square {
+.game{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(83,120,149);
+background: radial-gradient(circle, rgba(83,120,149,1) 0%, rgba(0,46,102,1) 70%, rgba(9,32,63,1) 100%);
+}
+.container{
+  display: grid;
+  gap: 10px;
+}
+.board {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 6px;
   background: #fff;
-  border: 1px solid #999;
+}
+.square {
+  background: #615f5f;
+  border: none;
+  border-radius: 6px;
   font-size: 24px;
   font-weight: bold;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
+  transition: .5s ;
 }
 
-.board {
-  display: grid;
+.square.select{
+  background: #d3d3d3;
 }
 
-.horizontal {
-  display: flex;
-}
-
-.vertical {
-  display: flex;
-  flex-direction: column;
-}
 
 .rowClues {
   display: grid;
+  gap: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .colClues {
   display: grid;
+  gap: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .clue {
   display: flex;
-  justify-content: flex-end;
+  justify-content:space-around;
   align-items: center;
-  background: #b9d6e0;
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 6px;
   margin: 5px;
   padding: 3px;
+  pointer-events: none;
+  user-select: none;
 }
 
-.clue div {
+/* .clue div {
   margin: 2px
-}
+} */
 
 .colClues .clue {
   flex-direction: column;
@@ -65,4 +89,22 @@ body {
 
 .game-info {
   margin-left: 20px;
+}
+.popOut{
+  animation: popOut .3s;
+  transform: scale(0);
+}
+.popIn{
+  animation: popIn .3s;
+  transform: scale(1);
+}
+@keyframes popOut {
+  from{
+    transform: scale(1);
+  }
+}
+@keyframes popIn {
+  from{
+    transform: scale(0);
+  }
 }

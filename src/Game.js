@@ -5,8 +5,14 @@ import Board from './Board';
 let pengine;
 
 function Game() {
-
+  let gridCols = 3;
+  let gridRows = 3;
+  let clue = 5;
   // State
+  // const [grid, setGrid] = useState(Array(gridRows).fill(Array(gridCols).fill()));
+  // const [rowsClues, setRowsClues] = useState(Array(gridRows).fill(Array(clue).fill("1")));
+  // const [colsClues, setColsClues] = useState(Array(gridCols).fill(Array(clue).fill("1")));
+
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
@@ -31,6 +37,9 @@ function Game() {
     });
   }
 
+  function handleClick(i,j){
+  }
+  
   function handleClick(i, j) {
     // No action on click if we are waiting.
     if (waiting) {
@@ -38,7 +47,7 @@ function Game() {
     }
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-    const content = '#'; // Content to put in the clicked square.
+    const content = 'X'; // Content to put in the clicked square.
     const queryS = `put("${content}", [${i},${j}], [], [],${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     setWaiting(true);
     pengine.query(queryS, (success, response) => {
@@ -47,6 +56,8 @@ function Game() {
       }
       setWaiting(false);
     });
+    
+    console.log(grid)
   }
 
   if (!grid) {
