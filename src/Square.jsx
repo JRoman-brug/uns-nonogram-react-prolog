@@ -4,6 +4,7 @@ function Square({ value, onClick , color}) {
     let select = "";
     let xMark = "";
 
+    // rework
     if(value === "_") {
         select = ""
         xMark = "popOut";
@@ -16,9 +17,9 @@ function Square({ value, onClick , color}) {
         select = "";
         xMark = "popIn";
     }
-
+    
     return (
-        <button className={`square ${select}`} onClick={onClick} style={{background:color}} >
+        <button className={`square ${select} `} onClick={onClick} >
            <i className={`fa-solid fa-xmark ${xMark}`}></i>
         </button>
     );

@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 // import PengineClient from './PengineClient';
 import Board from './Board';
-import SquareRainbow from './SquareRainbow';
 
 // let pengine;
 
@@ -14,6 +13,7 @@ function Game() {
   const [rowsClues, setRowsClues] = useState(Array(gridRows).fill(Array(clue).fill("1")));
   const [colsClues, setColsClues] = useState(Array(gridCols).fill(Array(clue).fill("1")));
 
+  const [win, setWin] = useState(false);
   // const [grid, setGrid] = useState(null);
   // const [rowsClues, setRowsClues] = useState(null);
   // const [colsClues, setColsClues] = useState(null);
@@ -39,6 +39,11 @@ function Game() {
   // }
 
   // <---For dev (remove)------------
+
+  function testWin(){
+    setWin(true)
+  }
+
   const [selectMode, setSelectMode] = useState(true);
   function changeMode() {
     setSelectMode(selectMode ? false : true);
@@ -118,15 +123,13 @@ function Game() {
         grid={grid}
         rowsClues={rowsClues}
         colsClues={colsClues}
+        win={win}
         onClick={(i, j) => handleClick(i, j)}
       />
       <div className="game-info">
         <button onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button>
-        <SquareRainbow color={colorTest[0]} onClick={animation}></SquareRainbow>
-        <SquareRainbow color={colorTest[1]} onClick={animation}></SquareRainbow>
-        <SquareRainbow color={colorTest[2]} onClick={animation}></SquareRainbow>
-        <SquareRainbow color={colorTest[3]} onClick={animation}></SquareRainbow>
-        <SquareRainbow color={colorTest[4]} onClick={animation}></SquareRainbow>
+        <button onClick={testWin}>win</button>
+
       </div>
     </div>
   );

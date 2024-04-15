@@ -1,34 +1,42 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Square from './Square';
 import Clue from './Clue';
 
-function Board({ grid, rowsClues, colsClues, onClick }) {
+function Board({ grid, rowsClues, colsClues, onClick, win}) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
 
-    const colorRef = useRef('');
-    const [color, setColor] = useState(Array(numOfRows).fill(""));
-
-    useEffect(() => {
-        colorRef.current = color;
-    });
-
+    // Rework
+    const [color, setColor] = useState(Array(numOfRows).fill(Array(numOfCols).fill("lightgray")));
     function winAnimation() {
         const colores = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"];
         let delay = 0;
+
         colores.forEach(c => {
-            for (let i = 0; i < colorRef.current.length; i++) {
-                setTimeout(() => {
-                    let newColorTest = [...colorRef.current]
-                    newColorTest[i] = c;
-                    setColor(newColorTest);
-                }, delay);
-                delay += 100;
+            for (let i = 0; i < numOfCols; i++) {
+                for (let j = 0; j <numOfRows; j++) {
+
+                    setTimeout(() => {
+                        setColor(colorTestValue => {
+                            let newColorTest = copyColor(colorTestValue);
+                            newColorTest[i][j] = c;
+                            return newColorTest;
+                        });
+                    }, delay);
+                    delay += 100;
+                }
             }
-            delay += 1000;
+            delay += 500;
         })
     }
 
+    function copyColor(value) {
+        let newColor = [];
+        value.forEach(elem => {
+            newColor.push([...elem]);
+        })
+        return newColor
+    }
     // Rework
     function maxNumClue(arregloDeArreglos) {
         let longitudMaxima = 0;
@@ -102,9 +110,9 @@ function Board({ grid, rowsClues, colsClues, onClick }) {
                             value={cell}
                             onClick={() => {
                                 onClick(i, j);
-                                winAnimation();
+                                // winAnimation()
                             }}
-                            color={color[j]}
+                            color={color[i][j]}
                             key={i + j}
                         />
                     )

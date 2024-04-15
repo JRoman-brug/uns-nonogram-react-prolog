@@ -10,19 +10,22 @@ body {
   padding: 0;
   margin: 0;
 }
-.game{
+
+.game {
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgb(83,120,149);
-background: radial-gradient(circle, rgba(83,120,149,1) 0%, rgba(0,46,102,1) 70%, rgba(9,32,63,1) 100%);
+  background: rgb(83, 120, 149);
+  background: radial-gradient(circle, rgba(83, 120, 149, 1) 0%, rgba(0, 46, 102, 1) 70%, rgba(9, 32, 63, 1) 100%);
 }
-.container{
+
+.container {
   display: grid;
   gap: 10px;
 }
+
 .board {
   display: grid;
   gap: 10px;
@@ -30,6 +33,11 @@ background: radial-gradient(circle, rgba(83,120,149,1) 0%, rgba(0,46,102,1) 70%,
   border-radius: 6px;
   background: #fff;
 }
+
+
+
+
+/* Animation of square */
 .square {
   border: none;
   background: #d3d3d3;
@@ -40,13 +48,63 @@ background: radial-gradient(circle, rgba(83,120,149,1) 0%, rgba(0,46,102,1) 70%,
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  transition: .5s ;
+  transition: .5s;
 }
 
-.square.select{
+.square.select {
   background: #615f5f;
 }
 
+.square.winAnimation{
+  animation: winAnimation .5s; 
+}
+/* ["red", "orange", "yellow", "green", "blue", "indigo"];
+         */
+@keyframes winAnimation {
+  0%{
+    background-color: red;
+  }
+  17%{
+    background-color: orange;
+  }
+  34%{
+    background-color: yellow;
+  }
+  51%{
+    background-color: green;
+  }
+  68%{
+    background-color: blue;
+  }
+  85%{
+    background-color: indigo;
+  }
+}
+
+/* XMark */
+.popOut {
+  animation: popOut .3s;
+  transform: scale(0);
+}
+
+.popIn {
+  animation: popIn .3s;
+  transform: scale(1);
+}
+
+@keyframes popOut {
+  from {
+    transform: scale(1);
+  }
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0);
+  }
+}
+
+/* Animation of squeare */
 
 .rowClues {
   display: grid;
@@ -64,7 +122,7 @@ background: radial-gradient(circle, rgba(83,120,149,1) 0%, rgba(0,46,102,1) 70%,
 
 .clue {
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   align-items: center;
   background: #fff;
   border-radius: 6px;
@@ -92,22 +150,4 @@ background: radial-gradient(circle, rgba(83,120,149,1) 0%, rgba(0,46,102,1) 70%,
   flex-direction: column;
   margin-left: 20px;
   gap: 5px;
-}
-.popOut{
-  animation: popOut .3s;
-  transform: scale(0);
-}
-.popIn{
-  animation: popIn .3s;
-  transform: scale(1);
-}
-@keyframes popOut {
-  from{
-    transform: scale(1);
-  }
-}
-@keyframes popIn {
-  from{
-    transform: scale(0);
-  }
 }
