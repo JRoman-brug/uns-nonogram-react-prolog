@@ -5,43 +5,28 @@ import Clue from './Clue';
 function Board({ grid, rowsClues, colsClues, onClick }) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
-    const [color, setColor] = useState(Array(numOfRows).fill(Array(numOfCols).fill("")));
+
+    const colorRef = useRef('');
+    const [color, setColor] = useState(Array(numOfRows).fill(""));
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setColor("asd");
-        }, 1000);
-    
-        return () => clearInterval(interval);
-      }, []);
+        colorRef.current = color;
+    });
 
-
-    // function animation() {
-    //     const colores = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"]
-    //     let delay = 0;
-    //     let newColor = [];
-    //     color.forEach(elem=>{
-    //         newColor.push([...elem])
-    //     });
-    //     for (let i = 0; i < color[0].length; i++) {
-    //         for (let j = 0; j < color.length; j++) {
-    //             setTimeout(()=>{
-    //                 newColor[i][j] = "blue"
-    //             },delay);
-    //             delay+=1000;
-    //         }
-    //     }
-    //     setColor(newColor);
-    // }
-
-    // rework
-    function addColores(i, j) {
-        let newColor = [];
-        color.forEach((e) => {
-            newColor.push([...e])
+    function winAnimation() {
+        const colores = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"];
+        let delay = 0;
+        colores.forEach(c => {
+            for (let i = 0; i < colorRef.current.length; i++) {
+                setTimeout(() => {
+                    let newColorTest = [...colorRef.current]
+                    newColorTest[i] = c;
+                    setColor(newColorTest);
+                }, delay);
+                delay += 100;
+            }
+            delay += 1000;
         })
-        newColor[i][j] = "blue";
-        setColor(newColor);
     }
 
     // Rework
@@ -83,10 +68,10 @@ function Board({ grid, rowsClues, colsClues, onClick }) {
         gridTemplateRows: `${sizeClueColumn}px`,
         gridTemplateColumns: `repeat(${numOfCols}, ${sizeButton}px)`
     }
-    const styleRowsClues = {
-        gridTemplateRows: `repeat(${numOfRows}, ${sizeButton}px)`,
-        gridTemplateColumns: `${sizeClueRow}px`
-    }
+    // const styleRowsClues = {
+    //     gridTemplateRows: `repeat(${numOfRows}, ${sizeButton}px)`,
+    //     gridTemplateColumns: `${sizeClueRow}px`
+    // }
     const styleBoard = {
         gridTemplateRows: `repeat(${numOfRows}, ${sizeButton}px)`,
         gridTemplateColumns: `repeat(${numOfCols}, ${sizeButton}px)`,
@@ -116,8 +101,10 @@ function Board({ grid, rowsClues, colsClues, onClick }) {
                         <Square
                             value={cell}
                             onClick={() => {
-                                onClick(i, j)
+                                onClick(i, j);
+                                winAnimation();
                             }}
+                            color={color[j]}
                             key={i + j}
                         />
                     )
@@ -125,8 +112,5 @@ function Board({ grid, rowsClues, colsClues, onClick }) {
             </div>
         </div>
     );
-}
-function prueba() {
-    console.log();
 }
 export default Board;
