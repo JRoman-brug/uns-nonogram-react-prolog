@@ -10,6 +10,8 @@ function Game() {
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
+  const [colsCluesState, setColsCluesState] = useState(Array(5).fill(false));
+  const [rowsCluesState, setRowsCluesState] = useState(Array(5).fill(false));
   const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
@@ -31,14 +33,16 @@ function Game() {
     });
   }
 
+
   function handleClick(i, j) {
     // No action on click if we are waiting.
     if (waiting) {
       return;
     }
+    console.log(i+"--"+j);
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-    const content = '#'; // Content to put in the clicked square.
+    const content = '#' // Content to put in the clicked square.
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
     const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
@@ -46,6 +50,13 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
+        let newRowsStates = [...rowsCluesState];
+        newRowsStates[i] = response['RowSat']===1;
+        setRowsCluesState(newRowsStates);
+
+        let newClueStates = [...colsCluesState];
+        newClueStates[j] = response['ColSat']===1;
+        setColsCluesState(newClueStates);
       }
       setWaiting(false);
     });
@@ -62,6 +73,8 @@ function Game() {
         grid={grid}
         rowsClues={rowsClues}
         colsClues={colsClues}
+        rowsCluesState={rowsCluesState}
+        colsCluesState={colsCluesState}
         onClick={(i, j) => handleClick(i, j)}
       />
       <div className="game-info">
