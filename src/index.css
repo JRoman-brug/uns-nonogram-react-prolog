@@ -56,7 +56,7 @@ body {
 }
 
 .square.winAnimation{
-  animation: winAnimation .5s; 
+  animation: winAnimation 1s; 
 }
 /* ["red", "orange", "yellow", "green", "blue", "indigo"];
          */
@@ -89,7 +89,6 @@ body {
 
 .popIn {
   animation: popIn .3s;
-  transform: scale(1);
 }
 
 @keyframes popOut {

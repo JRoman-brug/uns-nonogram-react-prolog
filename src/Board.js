@@ -2,42 +2,10 @@ import React, { useState } from 'react';
 import Square from './Square';
 import Clue from './Clue';
 
-function Board({ grid, rowsClues, colsClues, onClick, win}) {
+function Board({ grid, rowsClues, colsClues, onClick}) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
 
-    // Rework
-    const [color, setColor] = useState(Array(numOfRows).fill(Array(numOfCols).fill("lightgray")));
-    function winAnimation() {
-        const colores = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"];
-        let delay = 0;
-
-        colores.forEach(c => {
-            for (let i = 0; i < numOfCols; i++) {
-                for (let j = 0; j <numOfRows; j++) {
-
-                    setTimeout(() => {
-                        setColor(colorTestValue => {
-                            let newColorTest = copyColor(colorTestValue);
-                            newColorTest[i][j] = c;
-                            return newColorTest;
-                        });
-                    }, delay);
-                    delay += 100;
-                }
-            }
-            delay += 500;
-        })
-    }
-
-    function copyColor(value) {
-        let newColor = [];
-        value.forEach(elem => {
-            newColor.push([...elem]);
-        })
-        return newColor
-    }
-    // Rework
     function maxNumClue(arregloDeArreglos) {
         let longitudMaxima = 0;
 
@@ -62,8 +30,7 @@ function Board({ grid, rowsClues, colsClues, onClick, win}) {
     //    |      |    |    |    |    |    |    |    |  60px
     //    |      |    |    |    |    |    |    |    |  (gridTemplateRows)
     //     ------ ---- ---- ---- ---- ---- ---- ---- 
-    const sizeButton = 50;
-
+    const sizeButton = 50;  
     // size of all buttons + size of gap + size of padding
     const sizeColumsGrid = numOfCols * (sizeButton) + (numOfCols - 1) * 10 + 20;
     const sizeRowsGrid = numOfRows * (sizeButton) + (numOfRows - 1) * 10 + 20;
@@ -110,9 +77,7 @@ function Board({ grid, rowsClues, colsClues, onClick, win}) {
                             value={cell}
                             onClick={() => {
                                 onClick(i, j);
-                                // winAnimation()
                             }}
-                            color={color[i][j]}
                             key={i + j}
                         />
                     )

@@ -5,9 +5,9 @@ import Board from './Board';
 // let pengine;
 
 function Game() {
-  let gridCols = 4;
-  let gridRows = 4;
-  let clue = 2;
+  let gridCols = 8;
+  let gridRows = 8;
+  let clue = 4;
   // State
   const [grid, setGrid] = useState(Array(gridRows).fill(Array(gridCols).fill("_")));
   const [rowsClues, setRowsClues] = useState(Array(gridRows).fill(Array(clue).fill("1")));
@@ -40,7 +40,7 @@ function Game() {
 
   // <---For dev (remove)------------
 
-  function testWin(){
+  function testWin() {
     setWin(true)
   }
 
@@ -65,31 +65,34 @@ function Game() {
     }
     setGrid(newGrid);
   }
+  // const [color, setColor] = useState(Array(gridRows).fill(Array(gridCols).fill(null)));
+  // function winAnimation() {
+  //   const colores = ["red", "orange", "yellow", "green", "blue", "indigo"];
+  //   let delay = 0;
 
-  const colorTestRef = useRef('');
-  const [colorTest, setColorTest] = useState(["ligthgray", "ligthgray", "ligthgray", "ligthgray", "ligthgray"]);
+  //   colores.forEach(c => {
+  //     for (let i = 0; i < gridCols; i++) {
+  //       for (let j = 0; j < gridRows; j++) {
 
-  useEffect(() => {
-    colorTestRef.current = colorTest;
-  });
-
-  function animation() {
-    const color = ["red", "orange", "yellow", "green", "blue", "indigo", "lightgray"]
-    let delay = 0;
-    color.forEach(c => {
-      for (let i = 0; i < colorTestRef.current.length; i++) {
-        setTimeout(() => {
-          let newColorTest = [...colorTestRef.current];
-          newColorTest[i] = c;
-          setColorTest(newColorTest);
-          console.log(newColorTest);
-        }, delay);
-        delay += 200;
-      }
-    });
-  }
-
-
+  //         setTimeout(() => {
+  //           setColor(colorTestValue => {
+  //             let newColorTest = copyColor(colorTestValue);
+  //             newColorTest[i][j] = c;
+  //             return newColorTest;
+  //           });
+  //         }, delay);
+  //         delay += 100;
+  //       }
+  //     }
+  //   })
+  // }
+  // function copyColor(value) {
+  //   let newColor = [];
+  //   value.forEach(elem => {
+  //     newColor.push([...elem]);
+  //   })
+  //   return newColor
+  // }
   // ---For dev (remove)------------>
 
   // function handleClick(i, j) {
@@ -123,12 +126,13 @@ function Game() {
         grid={grid}
         rowsClues={rowsClues}
         colsClues={colsClues}
+        // color={color}
         win={win}
         onClick={(i, j) => handleClick(i, j)}
       />
       <div className="game-info">
         <button onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button>
-        <button onClick={testWin}>win</button>
+        {/* <button onClick={winAnimation}>win</button> */}
 
       </div>
     </div>
