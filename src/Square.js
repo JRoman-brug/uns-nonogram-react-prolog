@@ -1,9 +1,8 @@
 import React from 'react';
 
-function Square({ value, onClick }) {
+function Square({ value, onClick}) {
     let select = "";
     let xMark = "";
-
     switch(value){
         case "_":{
             select = ""
@@ -21,8 +20,6 @@ function Square({ value, onClick }) {
             break;
         }
     }
-    // rework
-
     return (
         <button className={`square ${select}`}  onClick={onClick} >
            <i className={`fa-solid fa-xmark ${xMark}`}></i>

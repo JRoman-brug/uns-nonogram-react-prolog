@@ -6,17 +6,18 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
 
+    // rework
     function maxNumClue(arregloDeArreglos) {
         let longitudMaxima = 0;
 
         for (let subarreglo of arregloDeArreglos) {
             if (subarreglo.length > longitudMaxima) {
                 longitudMaxima = subarreglo.length;
-
             }
         }
         return longitudMaxima;
     }
+
     const maxNumClueRow = maxNumClue(rowsClues);
     const maxNumClueColumn = maxNumClue(colsClues);
 
@@ -66,7 +67,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
 
             <div className="rowClues">
                 {rowsClues.map((clue, i) =>
-                    <Clue clue={clue} key={i} />
+                    <Clue clue={clue} state={rowsCluesState[i]} key={i} />
                 )}
             </div>
 

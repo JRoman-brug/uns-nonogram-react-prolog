@@ -40,7 +40,27 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
 	replace(_Cell, ColN, Content, Row, NewRow)),
 	transpose(NewGrid, NewGridT),
 	checkConditionState([RowN,ColN], RowsClues, ColsClues, NewGrid, NewGridT, RowSat, ColSat).
-%
+
+
+gameStatus([], [], 1).
+
+gameStatus([R|_Rs], _C, 0) :-
+	R == 0.
+
+gameStatus(_R, [C|_Cs], 0) :-
+	C == 0.
+
+gameStatus([R|Rs], C, Res) :-
+	R == 1,
+	gameStatus(Rs, C, Res).
+
+gameStatus(R, [C|Cs], Res) :-
+	C == 1,
+	gameStatus(R, Cs, Res).
+
+gameStatus(RowsClues, ColsClues, R).
+
+
 % Predicate win condition
 % Position: [Row, ColN]+, ClueRows [R|Rs]+, ClueColumns [C|Cs]+, list Rows NewGridR+, list columns NewGridC+, RowSat-, ColSat- 
 checkConditionState([0, 0], [R|_RS], [C|_Cs], [NewGridR|_NewGridRs] , [NewGridC|_NewGridCs], RowSat, ColSat) :-

@@ -1,29 +1,25 @@
-import React, { useRef, useEffect, useState } from 'react';
-// import PengineClient from './PengineClient';
+import React, { useEffect, useState } from 'react';
+import PengineClient from './PengineClient';
 import Board from './Board';
+import Modal from './Modal';
+import Switch from "react-switch";
 
-// let pengine;
+let pengine;
 
 function Game() {
-  // let gridCols = 8;
-  // let gridRows = 8;
-  // let clue = 4;
-  // // State
-  // const [grid, setGrid] = useState(Array(gridRows).fill(Array(gridCols).fill("_")));
-  // const [rowsClues, setRowsClues] = useState(Array(gridRows).fill(Array(clue).fill("1")));
-  // const [colsClues, setColsClues] = useState(Array(gridCols).fill(Array(clue).fill("1")));
 
-  const [win, setWin] = useState(false);
-  // const [grid, setGrid] = useState(null);
-  // const [rowsClues, setRowsClues] = useState(null);
-  // const [colsClues, setColsClues] = useState(null);
-  // const [waiting, setWaiting] = useState(false);
+
+  // TODO
+  // KEYBINDING
+  // SOUNDS EFFECTS
+  // ANIMATION WIN
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
-  const [colsCluesState, setColsCluesState] = useState(Array(5).fill(false));
-  const [rowsCluesState, setRowsCluesState] = useState(Array(5).fill(false));
+  const [colsCluesState, setColsCluesState] = useState();
+  const [rowsCluesState, setRowsCluesState] = useState();
   const [waiting, setWaiting] = useState(false);
+  const [gameStatus, setGameStatus] = useState(false);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -40,14 +36,11 @@ function Game() {
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
+
+        setRowsCluesState(Array(response['RowClues'].length).fill(0))
+        setColsCluesState(Array(response['ColumClues'].length).fill(0))
       }
     });
-  }
-
-  // <---For dev (remove)------------
-
-  function testWin() {
-    setWin(true)
   }
 
   const [selectMode, setSelectMode] = useState(true);
@@ -58,16 +51,17 @@ function Game() {
 
   function handleClick(i, j) {
     // No action on click if we are waiting.
-    if (waiting) {
+    if (waiting || gameStatus) {
       return;
     }
-    console.log(i+"--"+j);
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-    
+
     let content // Content to put in the clicked square.
-    if(selectMode) content = "#";
+    // for select
+    if (selectMode) content = "#";
     else content = "X";
+
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
     const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
@@ -76,37 +70,52 @@ function Game() {
       if (success) {
         setGrid(response['ResGrid']);
         let newRowsStates = [...rowsCluesState];
-        newRowsStates[i] = response['RowSat']===1;
+        newRowsStates[i] = response['RowSat'];
         setRowsCluesState(newRowsStates);
 
         let newClueStates = [...colsCluesState];
-        newClueStates[j] = response['ColSat']===1;
+        newClueStates[j] = response['ColSat'];
         setColsCluesState(newClueStates);
+
+        console.log("RowSat and ColSat: " + response['RowSat'] + " " + response['ColSat']);
+
+        const rowsCluesStateS = JSON.stringify(newRowsStates);
+        const colsCluesStateS = JSON.stringify(newClueStates);
+        const queryWin = `gameStatus(${rowsCluesStateS}, ${colsCluesStateS}, Res)`;
+        pengine.query(queryWin, (success, response) => {
+          if (success) setGameStatus(response['Res'] === 1);
+          console.log(gameStatus)
+        });
       }
+
       setWaiting(false);
     });
-    setGrid(newGrid);
   }
+
+  // Animation 
+  // <---For dev (remove)------------
+
+  // function testWin() {
+  //   setWin(true)
+  // }
   // const [color, setColor] = useState(Array(gridRows).fill(Array(gridCols).fill(null)));
   // function winAnimation() {
   //   const colores = ["red", "orange", "yellow", "green", "blue", "indigo"];
   //   let delay = 0;
 
-  //   colores.forEach(c => {
-  //     for (let i = 0; i < gridCols; i++) {
-  //       for (let j = 0; j < gridRows; j++) {
-
-  //         setTimeout(() => {
-  //           setColor(colorTestValue => {
-  //             let newColorTest = copyColor(colorTestValue);
-  //             newColorTest[i][j] = c;
-  //             return newColorTest;
-  //           });
-  //         }, delay);
-  //         delay += 100;
-  //       }
+  //   for (let i = 0; i < gridCols; i++) {
+  //     for (let j = 0; j < gridRows; j++) {
+  //       setTimeout(() => {
+  //         setColor(colorTestValue => {
+  //           let newColorTest = copyColor(colorTestValue);
+  //           newColorTest[i][j] = c;
+  //           return newColorTest;
+  //         });
+  //       }, delay);
+  //       delay += 100;
   //     }
-  //   })
+  //   }
+
   // }
   // function copyColor(value) {
   //   let newColor = [];
@@ -117,45 +126,44 @@ function Game() {
   // }
   // ---For dev (remove)------------>
 
-  // function handleClick(i, j) {
-  //   // No action on click if we are waiting.
-  //   if (waiting) {
-  //     return;
-  //   }
-  //   // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
-  //   const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-  //   const content = 'X'; // Content to put in the clicked square.
-  //   const queryS = `put("${content}", [${i},${j}], [], [],${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
-  //   setWaiting(true);
-  //   pengine.query(queryS, (success, response) => {
-  //     if (success) {
-  //       setGrid(response['ResGrid']);
-  //     }
-  //     setWaiting(false);
-  //   });
-
-  //   console.log(grid)
-  // }
-
-
   if (!grid) {
     return null;
   }
-  // const statusText = 'Keep playing!';
+
   return (
     <div className="game">
-      <Board
-        grid={grid}
-        rowsClues={rowsClues}
-        colsClues={colsClues}
-        rowsCluesState={rowsCluesState}
-        colsCluesState={colsCluesState}
-        onClick={(i, j) => handleClick(i, j)}
-      />
-      <div className="game-info">
-        <button onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button>
-        {/* <button onClick={winAnimation}>win</button> */}
+      <Modal winCondition={gameStatus}/>
+      <div className='game-container'>
+        <Board
+          grid={grid}
+          rowsClues={rowsClues}
+          colsClues={colsClues}
+          rowsCluesState={rowsCluesState}
+          colsCluesState={colsCluesState}
+          onClick={(i, j) => handleClick(i, j)}
+        />
+        <div className="game-info">
+          <Switch
+            uncheckedIcon={
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                <i className="fa-solid fa-xmark"></i>
+              </div>
+            }
+            checkedIcon={
+              <div style={{display:"flex",justifyContent:"center",alignItems:"center", width:"100%",height:"100%"}}>
+                <i className="fa-solid fa-square"></i>
+              </div>
+            }
+            checked={selectMode}
+            onChange={changeMode}
+            className="react-switch"
+            height={30}
+            width={60}
+          />
+          {/* <button className='btn-change-mode' onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button> */}
+          <p>Game status: {gameStatus ? "Win" : "still play"}</p>
 
+        </div>
       </div>
     </div>
   );

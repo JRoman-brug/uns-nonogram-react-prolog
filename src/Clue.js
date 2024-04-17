@@ -1,14 +1,13 @@
 import React from 'react';
 
-function Clue({ clue, state}) { 
+function Clue({ clue, state }) { 
 
-    const clueStyle = {
-        color:`${state?"red":"black"}`,
-    }
+    const clueState = state ?"active":"";
+   
     return (
-        <div className={`clue`} style={estilo} >
+        <div className={`clue ${clueState}`}  >
             {clue.map((num, i) =>
-                <div key={i} style={clueStyle}>
+                <div key={i}>
                     {num}
                 </div>
             )}
