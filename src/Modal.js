@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-function Modal({winCondition}) {
+function Modal({winCondition, activeAnimation}) {
     const [finishAnimation, setFinishAnimation] = useState(false);
     const [openModal, setOpenModal] = useState("");
 
    function timing(){
-    console.log("hola")
     setFinishAnimation(true)
+    activeAnimation();
    }
     return (
         <div className={`container_modal ${(!winCondition && finishAnimation)||(winCondition && !finishAnimation) ? "container_modal_open":""}`}>

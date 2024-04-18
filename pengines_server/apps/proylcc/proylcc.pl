@@ -58,7 +58,6 @@ gameStatus(R, [C|Cs], Res) :-
 	C == 1,
 	gameStatus(R, Cs, Res).
 
-gameStatus(RowsClues, ColsClues, R).
 
 
 % Predicate win condition

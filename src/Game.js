@@ -21,6 +21,7 @@ function Game() {
   const [gameStatus, setGameStatus] = useState(false);
 
   const [inGame, setIngame] = useState(false);
+  const [animationWin, setAnimationWin] = useState(false);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -93,47 +94,18 @@ function Game() {
     });
   }
 
-  // Animation 
-  // <---For dev (remove)------------
-
-  // function testWin() {
-  //   setWin(true)
-  // }
-  // const [color, setColor] = useState(Array(gridRows).fill(Array(gridCols).fill(null)));
-  // function winAnimation() {
-  //   const colores = ["red", "orange", "yellow", "green", "blue", "indigo"];
-  //   let delay = 0;
-
-  //   for (let i = 0; i < gridCols; i++) {
-  //     for (let j = 0; j < gridRows; j++) {
-  //       setTimeout(() => {
-  //         setColor(colorTestValue => {
-  //           let newColorTest = copyColor(colorTestValue);
-  //           newColorTest[i][j] = c;
-  //           return newColorTest;
-  //         });
-  //       }, delay);
-  //       delay += 100;
-  //     }
-  //   }
-
-  // }
-  // function copyColor(value) {
-  //   let newColor = [];
-  //   value.forEach(elem => {
-  //     newColor.push([...elem]);
-  //   })
-  //   return newColor
-  // }
-  // ---For dev (remove)------------>
-
   function joinGame(){
     setIngame(true);
   }
+
+  function activeAnimationWin(){
+    setAnimationWin(true);
+  }
+
   if (!grid) {
     return null;
   }
-
+// TO DO rework container_game with a div gigant 
   return (
     <div className='container_game'>
       <div className={`presentation ${!inGame ? "active" : "inactive"}`}>
@@ -142,7 +114,7 @@ function Game() {
         <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button>
       </div>
       <div className={`game ${inGame ? "active" : "inactive"}`}>
-        <Modal winCondition={gameStatus} />
+        <Modal winCondition={gameStatus} activeAnimation = {activeAnimationWin}/>
         <div className='game-container'>
           <Board
             grid={grid}
@@ -150,6 +122,7 @@ function Game() {
             colsClues={colsClues}
             rowsCluesState={rowsCluesState}
             colsCluesState={colsCluesState}
+            gameStatus={animationWin}
             onClick={(i, j) => handleClick(i, j)}
           />
           <div className="game-info">

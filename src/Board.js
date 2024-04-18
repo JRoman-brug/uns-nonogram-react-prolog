@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
 import Square from './Square';
 import Clue from './Clue';
 
-function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesState }) {
+function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesState, gameStatus }) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
-
+    let index = 0;
     // rework
     function maxNumClue(arregloDeArreglos) {
         let longitudMaxima = 0;
@@ -44,10 +43,10 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
         gridTemplateRows: `${sizeClueColumn}px`,
         gridTemplateColumns: `repeat(${numOfCols}, ${sizeButton}px)`
     }
-    // const styleRowsClues = {
-    //     gridTemplateRows: `repeat(${numOfRows}, ${sizeButton}px)`,
-    //     gridTemplateColumns: `${sizeClueRow}px`
-    // }
+    const styleRowsClues = {
+        gridTemplateRows: `repeat(${numOfRows}, ${sizeButton}px)`,
+        gridTemplateColumns: `${sizeClueRow}px`
+    }
     const styleBoard = {
         gridTemplateRows: `repeat(${numOfRows}, ${sizeButton}px)`,
         gridTemplateColumns: `repeat(${numOfCols}, ${sizeButton}px)`,
@@ -65,7 +64,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
                 )}
             </div>
 
-            <div className="rowClues">
+            <div className="rowClues" style={styleRowsClues}>
                 {rowsClues.map((clue, i) =>
                     <Clue clue={clue} state={rowsCluesState[i]} key={i} />
                 )}
@@ -76,9 +75,12 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
                     row.map((cell, j) =>
                         <Square
                             value={cell}
+                            win={true}
                             onClick={() => {
                                 onClick(i, j);
                             }}
+                            index={index++}
+                            gameStatus={gameStatus}
                             key={i + j}
                         />
                     )

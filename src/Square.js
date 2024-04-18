@@ -1,33 +1,17 @@
 import React from 'react';
 
-function Square({ value, onClick}) {
-    let select = "";
-    let xMark = "";
-    switch(value){
-        case "_":{
-            select = "selectPopOut"
-            xMark = "popOut";
-            break;
-        }
-        case "#":{
-            select = "selectPopIn"
-            xMark = "popOut";
-            break;
-        }
-        case "X":{
-            select = "selectPopOut";
-            xMark = "popIn";
-            break;
-        }
-        default:{
-            select = "selectPopOut"
-            xMark = "popOut";
-        }
-    }
+function Square({ value, onClick, gameStatus, index }) {
+
+    let select = value === "#";
+    let xMark = value === "X";
     return (
-        <button className={`square`}  onClick={onClick} >
-           <div className={`select ${select}`}></div> 
-           <i className={`fa-solid fa-xmark ${xMark}`}></i>
+        <button className={`square`} onClick={onClick} >
+            <div
+                className={`select ${select ? "selectPopIn" : "selectPopOut"} ${gameStatus && select ? "animationSquare" : ""}`}
+                style={{ animationDelay: `${gameStatus && select ? (index * 10) : 0}ms` }}>
+
+            </div>
+            <i className={`fa-solid fa-xmark ${xMark ? "popIn" : "popOut"}`}></i>
         </button>
     );
 }
