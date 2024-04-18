@@ -11,16 +11,95 @@ body {
   margin: 0;
 }
 
+.container_game {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: rgb(83, 120, 149);
+  background: radial-gradient(circle, rgba(83, 120, 149, 1) 0%, rgba(0, 46, 102, 1) 70%, rgba(9, 32, 63, 1) 100%);
+}
+.activeWindows{
+  position: absolute;
+  right: 32px;
+  bottom: 20px;
+}
+.presentation {
+  position: absolute;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  transition: 0.5s;
+}
+
+.presentation h1 {
+  color: white;
+  font-size: 80px;
+  margin: 0;
+  user-select: none;
+}
+
+.presentation h2 {
+  color: #09203f;
+  font-size: 28px;
+  margin: 0;
+  user-select: none;
+}
+
+.presentation .button_joinGame {
+  width: 200px;
+  height: 40px;
+  margin-top: 8px;
+  border: none;
+  background: #d3d3d3;
+  border-radius: 6px;
+  font-size: 20px;
+  transition: 0.5s;
+  color: black;
+}
+
+.presentation .button_joinGame:hover {
+  color: white;
+  background: #09203f;
+}
+
+.presentation.active {
+  top: 0;
+  left: 0;
+}
+
+.presentation.inactive {
+  top: -100vh;
+}
+
 .game {
+  position: absolute;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgb(83, 120, 149);
-  background: radial-gradient(circle, rgba(83, 120, 149, 1) 0%, rgba(0, 46, 102, 1) 70%, rgba(9, 32, 63, 1) 100%);
+  /* background: rgb(83, 120, 149);
+  background: radial-gradient(circle, rgba(83, 120, 149, 1) 0%, rgba(0, 46, 102, 1) 70%, rgba(9, 32, 63, 1) 100%); */
+  transition: 0.5s;
 }
 
+.game.active {
+  top: 0;
+  left: 0;
+}
+
+.game.inactive {
+  top: 100vh;
+  left: 0;
+}
+
+
+/* Component board */
 .container {
   display: grid;
   gap: 10px;
@@ -32,7 +111,7 @@ body {
   padding: 10px;
   border-radius: 6px;
   background: #fff;
-  box-shadow: 0 0 10px ;
+  box-shadow: 0 0 10px;
 }
 
 
@@ -40,6 +119,9 @@ body {
 
 /* Animation of square */
 .square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   background: #d3d3d3;
   border-radius: 6px;
@@ -50,12 +132,45 @@ body {
   padding: 0;
   text-align: center;
   transition: .3s;
+  position: relative;
 }
 
-.square.select {
+.square .select{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
   background: #1f3c92;
 }
+.selectPopOut{
+  animation: selectPopOut .3s;
+  transform: scale(0);
+}
+.selectPopIn{
+  animation: selectPopIn .3s;
+}
 
+
+@keyframes selectPopOut {
+  from {
+    transform: scale(1);
+  }
+}
+
+@keyframes selectPopIn {
+  from {
+    transform: scale(0);
+  }
+  0% {
+    transform: scale(0);
+  }
+  50%{
+    transform: scale(1.2);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
 
 /* XMark */
 .popOut {
@@ -95,7 +210,7 @@ body {
   padding-right: 10px;
 }
 
-.clue {
+/* .clue {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -107,17 +222,73 @@ body {
   user-select: none;
   transition: .5s;
   box-shadow: inset 0 0 6px black;
+} */
+
+.clue {
+  background-color: transparent;
+  perspective: 1000px;
 }
-.clue.active{
+
+/* This container is needed to position the front and back side */
+.inner_clue {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.clue.active .inner_clue {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.front_clue,
+.back_clue {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.front_clue {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 6px;
+  background-color: #d3d3d3;
+  pointer-events: none;
+  box-shadow: inset 0 0 6px black;
+  color: black;
+}
+
+/* Style the back side */
+.back_clue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  box-shadow: inset 0 0 6px black;
+  background-color: green;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+/* .clue.active{
   box-shadow: inset 0 0 3px black;
   background: #fff;
-}
+} */
 
 /* .clue div {
   margin: 2px
 } */
 
-.colClues .clue {
+.colClues .clue .inner_clue .front_clue {
   flex-direction: column;
 }
 
@@ -125,17 +296,20 @@ body {
   display: flex;
   flex-direction: row;
 }
-.game-container{
+
+.game-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
+
 .game-info {
   display: flex;
   justify-content: space-between;
   gap: 5px;
 }
-.game-info .btn-change-mode{
+
+.game-info .btn-change-mode {
   border-radius: 8px;
   font-size: 20px;
   font-weight: bold;
@@ -146,7 +320,7 @@ body {
 
 
 /* Modal */
-.container_modal{
+.container_modal {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -163,10 +337,12 @@ body {
   background: #00000050;
   opacity: 0;
 }
-.container_modal_open{
+
+.container_modal_open {
   opacity: 1;
 }
-.modal_win{
+
+.modal_win {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,26 +351,29 @@ body {
   z-index: 21;
   transform: scale(0);
 }
-.modal_win_open{
+
+.modal_win_open {
   animation: winOpen 2s ease-out 0.3s;
 }
 
 @keyframes winOpen {
-  0%{
-      transform: scale(0);
+  0% {
+    transform: scale(0);
   }
-  80%{
-      transform: scale(1);
+
+  80% {
+    transform: scale(1);
   }
-  100%{
-      transform: scale(0);
+
+  100% {
+    transform: scale(0);
   }
 }
 
-
-.modal_win h1{
+.modal_win h1 {
   font-size: 400px;
   -webkit-text-stroke: 10px white;
-  font-family:"Montserrat", sans-serif; ;
+  font-family: "Montserrat", sans-serif;
+  ;
   font-weight: 900;
 }

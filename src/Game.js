@@ -9,10 +9,9 @@ let pengine;
 function Game() {
 
 
-  // TODO
+  // TO DO
   // KEYBINDING
   // SOUNDS EFFECTS
-  // ANIMATION WIN
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
@@ -20,6 +19,8 @@ function Game() {
   const [rowsCluesState, setRowsCluesState] = useState();
   const [waiting, setWaiting] = useState(false);
   const [gameStatus, setGameStatus] = useState(false);
+
+  const [inGame, setIngame] = useState(false);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -126,45 +127,57 @@ function Game() {
   // }
   // ---For dev (remove)------------>
 
+  function joinGame(){
+    setIngame(true);
+  }
   if (!grid) {
     return null;
   }
 
   return (
-    <div className="game">
-      <Modal winCondition={gameStatus}/>
-      <div className='game-container'>
-        <Board
-          grid={grid}
-          rowsClues={rowsClues}
-          colsClues={colsClues}
-          rowsCluesState={rowsCluesState}
-          colsCluesState={colsCluesState}
-          onClick={(i, j) => handleClick(i, j)}
-        />
-        <div className="game-info">
-          <Switch
-            uncheckedIcon={
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                <i className="fa-solid fa-xmark"></i>
-              </div>
-            }
-            checkedIcon={
-              <div style={{display:"flex",justifyContent:"center",alignItems:"center", width:"100%",height:"100%"}}>
-                <i className="fa-solid fa-square"></i>
-              </div>
-            }
-            checked={selectMode}
-            onChange={changeMode}
-            className="react-switch"
-            height={30}
-            width={60}
+    <div className='container_game'>
+      <div className={`presentation ${!inGame ? "active" : "inactive"}`}>
+        <h1>NONOGRAM-2024</h1>
+        <h2>by Popp-Brugnoni</h2>
+        <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button>
+      </div>
+      <div className={`game ${inGame ? "active" : "inactive"}`}>
+        <Modal winCondition={gameStatus} />
+        <div className='game-container'>
+          <Board
+            grid={grid}
+            rowsClues={rowsClues}
+            colsClues={colsClues}
+            rowsCluesState={rowsCluesState}
+            colsCluesState={colsCluesState}
+            onClick={(i, j) => handleClick(i, j)}
           />
-          {/* <button className='btn-change-mode' onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button> */}
-          <p>Game status: {gameStatus ? "Win" : "still play"}</p>
+          <div className="game-info">
+            <Switch
+              uncheckedIcon={
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                  <i className="fa-solid fa-xmark"></i>
+                </div>
+              }
+              checkedIcon={
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                  <i className="fa-solid fa-square"></i>
+                </div>
+              }
+              checked={selectMode}
+              onChange={changeMode}
+              className="react-switch"
+              height={30}
+              width={60}
+            />
+            {/* <button className='btn-change-mode' onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button> */}
+            <p>Game status: {gameStatus ? "Win" : "still play"}</p>
 
+          </div>
         </div>
       </div>
+
+      <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt=""/>
     </div>
   );
 }

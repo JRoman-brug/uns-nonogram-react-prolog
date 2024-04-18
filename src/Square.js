@@ -5,23 +5,28 @@ function Square({ value, onClick}) {
     let xMark = "";
     switch(value){
         case "_":{
-            select = ""
+            select = "selectPopOut"
             xMark = "popOut";
             break;
         }
         case "#":{
-            select = "select"
+            select = "selectPopIn"
             xMark = "popOut";
             break;
         }
         case "X":{
-            select = "";
+            select = "selectPopOut";
             xMark = "popIn";
             break;
         }
+        default:{
+            select = "selectPopOut"
+            xMark = "popOut";
+        }
     }
     return (
-        <button className={`square ${select}`}  onClick={onClick} >
+        <button className={`square`}  onClick={onClick} >
+           <div className={`select ${select}`}></div> 
            <i className={`fa-solid fa-xmark ${xMark}`}></i>
         </button>
     );
