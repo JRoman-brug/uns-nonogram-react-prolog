@@ -2,25 +2,24 @@ import React, { useEffect, useState } from 'react';
 import PengineClient from './PengineClient';
 import Board from './Board';
 import Modal from './Modal';
+import './styles/game.css'
 import Switch from "react-switch";
 
 let pengine;
 
 function Game() {
-
-
   // TO DO
   // KEYBINDING
-  // SOUNDS EFFECTS
+  // Use a context for gameStatus
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
-  const [colsCluesState, setColsCluesState] = useState();
-  const [rowsCluesState, setRowsCluesState] = useState();
+  const [colsCluesState, setColsCluesState] = useState(null);
+  const [rowsCluesState, setRowsCluesState] = useState(null);
   const [waiting, setWaiting] = useState(false);
   const [gameStatus, setGameStatus] = useState(false);
 
-  const [inGame, setIngame] = useState(false);
+  const [actualScreen, setActualScreen] = useState(0);
   const [animationWin, setAnimationWin] = useState(false);
 
   useEffect(() => {
@@ -30,19 +29,71 @@ function Game() {
     PengineClient.init(handleServerReady);
   }, []);
 
+  useEffect(() => {
+    if(grid && rowsClues && colsClues){
+      initializeCluesState();
+    }
+  }, [rowsClues, colsClues]);
+
+  useEffect(() => {
+    if(actualScreen === 1) checkGameStatus();
+  }, [rowsCluesState, colsCluesState]);
+
   function handleServerReady(instance) {
     pengine = instance;
     const queryS = 'init(RowClues, ColumClues, Grid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
+        setGameStatus(false);
+        setAnimationWin(false);
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
 
-        setRowsCluesState(Array(response['RowClues'].length).fill(0))
-        setColsCluesState(Array(response['ColumClues'].length).fill(0))
+        setRowsCluesState(Array(response['RowClues'].length).fill(0));
+        setColsCluesState(Array(response['ColumClues'].length).fill(0));
       }
     });
+  }
+
+  // Refactor
+  const initializeCluesState = () => {
+    rowsClues.forEach((clue, index) => {
+      const row = grid[index];
+      const queryS = `findClue(${JSON.stringify(clue)}, ${JSON.stringify(row)}, RowSat)`;
+      pengine.query(queryS, (success, response) => {
+        if(success){
+          setRowsCluesState((actualValue)=>{
+            let aux = [...actualValue];
+            aux[index] = response['RowSat'];
+            return aux;
+          });
+          
+        }
+      })
+    });
+
+    const queryS = `transpose(${JSON.stringify(grid)},R)`;
+    let transposeGrid;
+    pengine.query(queryS,(success, response) => {
+      transposeGrid = response['R'];
+
+      colsClues.forEach((clue, index) => {
+        const col = transposeGrid[index];
+        const queryS = `findClue(${JSON.stringify(clue)}, ${JSON.stringify(col)}, ColSat)`;
+        pengine.query(queryS, (success, response) => {
+          if(success){
+            setColsCluesState((actualValue)=>{
+              let aux = [...actualValue];
+              aux[index] = response['ColSat'];
+              return aux;
+            });
+            
+          }
+        })
+      });
+    });
+
   }
 
   const [selectMode, setSelectMode] = useState(true);
@@ -71,6 +122,7 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
+
         let newRowsStates = [...rowsCluesState];
         newRowsStates[i] = response['RowSat'];
         setRowsCluesState(newRowsStates);
@@ -78,79 +130,82 @@ function Game() {
         let newClueStates = [...colsCluesState];
         newClueStates[j] = response['ColSat'];
         setColsCluesState(newClueStates);
-
-        console.log("RowSat and ColSat: " + response['RowSat'] + " " + response['ColSat']);
-
-        const rowsCluesStateS = JSON.stringify(newRowsStates);
-        const colsCluesStateS = JSON.stringify(newClueStates);
-        const queryWin = `gameStatus(${rowsCluesStateS}, ${colsCluesStateS}, Res)`;
-        pengine.query(queryWin, (success, response) => {
-          if (success) setGameStatus(response['Res'] === 1);
-          console.log(gameStatus)
-        });
       }
 
       setWaiting(false);
     });
   }
 
-  function joinGame(){
-    setIngame(true);
+  function checkGameStatus() {
+    const rowsCluesStateS = JSON.stringify(rowsCluesState);
+    const colsCluesStateS = JSON.stringify(colsCluesState);
+    const queryWin = `gameStatus(${rowsCluesStateS}, ${colsCluesStateS}, Res)`;
+
+    if(pengine){
+      pengine.query(queryWin, (success, response) => {
+     
+        if (success){
+          setGameStatus(response['Res'] === 1);
+        }
+      });
+    }
+
   }
 
-  function activeAnimationWin(){
+
+  function joinGame() {
+    setActualScreen(1);
+  }
+  function activeAnimationWin() {
     setAnimationWin(true);
   }
 
   if (!grid) {
     return null;
   }
-// TO DO rework container_game with a div gigant 
   return (
     <div className='container_game'>
-      <div className={`presentation ${!inGame ? "active" : "inactive"}`}>
-        <h1>NONOGRAM-2024</h1>
-        <h2>by Popp-Brugnoni</h2>
-        <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button>
-      </div>
-      <div className={`game ${inGame ? "active" : "inactive"}`}>
-        <Modal winCondition={gameStatus} activeAnimation = {activeAnimationWin}/>
-        <div className='game-container'>
-          <Board
-            grid={grid}
-            rowsClues={rowsClues}
-            colsClues={colsClues}
-            rowsCluesState={rowsCluesState}
-            colsCluesState={colsCluesState}
-            gameStatus={animationWin}
-            onClick={(i, j) => handleClick(i, j)}
-          />
-          <div className="game-info">
-            <Switch
-              uncheckedIcon={
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                  <i className="fa-solid fa-xmark"></i>
-                </div>
-              }
-              checkedIcon={
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                  <i className="fa-solid fa-square"></i>
-                </div>
-              }
-              checked={selectMode}
-              onChange={changeMode}
-              className="react-switch"
-              height={30}
-              width={60}
+      <div className='actualScreen' style={{ top: `${actualScreen * -100}vh` }}>
+        <div className={`presentation screen`}>
+          <h1>NONOGRAM-2024</h1>
+          <h2>by Popp-Brugnoni</h2>
+          <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button>
+        </div>
+        <div className={`game screen`}>
+          <Modal winCondition={gameStatus} activeAnimation={activeAnimationWin} />
+          <div className='game-container'>
+            <Board
+              grid={grid}
+              rowsClues={rowsClues}
+              colsClues={colsClues}
+              rowsCluesState={rowsCluesState}
+              colsCluesState={colsCluesState}
+              gameStatus={animationWin}
+              onClick={(i, j) => handleClick(i, j)}
             />
-            {/* <button className='btn-change-mode' onClick={changeMode}>change mode {selectMode ? "#" : "X"}</button> */}
-            <p>Game status: {gameStatus ? "Win" : "still play"}</p>
-
+            <div className="game-info">
+              <Switch
+                uncheckedIcon={
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <i className="fa-solid fa-xmark"></i>
+                  </div>
+                }
+                checkedIcon={
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <i className="fa-solid fa-square"></i>
+                  </div>
+                }
+                checked={selectMode}
+                onChange={changeMode}
+                className="react-switch"
+                height={30}
+                width={60}
+              />
+            </div>
           </div>
         </div>
       </div>
-
-      <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt=""/>
+      <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
     </div>
   );
 }

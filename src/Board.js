@@ -1,10 +1,11 @@
 import Square from './Square';
 import Clue from './Clue';
+import './styles/board.css'
+import './styles/clue.css'
 
 function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesState, gameStatus }) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
-    let index = 0;
     // rework
     function maxNumClue(arregloDeArreglos) {
         let longitudMaxima = 0;
@@ -19,7 +20,6 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
 
     const maxNumClueRow = maxNumClue(rowsClues);
     const maxNumClueColumn = maxNumClue(colsClues);
-
 
 
     const sizeClueColumn = maxNumClueColumn * 35;
@@ -79,7 +79,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
                             onClick={() => {
                                 onClick(i, j);
                             }}
-                            index={index++}
+                            index={cell === "#" ?(i+j) :0}
                             gameStatus={gameStatus}
                             key={i + j}
                         />

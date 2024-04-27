@@ -2,7 +2,8 @@
 	[  
 		put/8,
 		checkClue/3,
-		findClue/3
+		findClue/3,
+		transpose/2
 	]).
 
 :-use_module(library(lists)).
@@ -38,8 +39,12 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
 	Cell == Content
 		;
 	replace(_Cell, ColN, Content, Row, NewRow)),
+	% Agregar en el informe porque usamos el transpose
 	transpose(NewGrid, NewGridT),
 	checkConditionState([RowN,ColN], RowsClues, ColsClues, NewGrid, NewGridT, RowSat, ColSat).
+
+
+gameStatus(RowsClues,ColsClues,Grid).
 
 
 gameStatus([], [], 1).

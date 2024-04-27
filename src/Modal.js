@@ -1,8 +1,8 @@
 import { useState } from "react";
+import './styles/modal.css'
 
 function Modal({winCondition, activeAnimation}) {
     const [finishAnimation, setFinishAnimation] = useState(false);
-    const [openModal, setOpenModal] = useState("");
 
    function timing(){
     setFinishAnimation(true)

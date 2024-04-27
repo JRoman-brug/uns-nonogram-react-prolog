@@ -1,0 +1,96 @@
+.rowClues {
+    display: grid;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+  .colClues {
+    display: grid;
+    gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  /* .clue {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #a5a5a5;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 3px;
+    pointer-events: none;
+    user-select: none;
+    transition: .5s;
+    box-shadow: inset 0 0 6px black;
+  } */
+  
+  .clue {
+    background-color: transparent;
+    perspective: 1000px;
+  }
+  
+  /* This container is needed to position the front and back side */
+  .inner_clue {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .clue.active .inner_clue {
+    transform: rotateY(180deg);
+  }
+  
+  /* Position the front and back side */
+  .front_clue,
+  .back_clue {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  /* Style the front side (fallback if image is missing) */
+  .front_clue {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 6px;
+    background-color: #d3d3d3;
+    pointer-events: none;
+    box-shadow: inset 0 0 6px black;
+    color: black;
+  }
+  
+  /* Style the back side */
+  .back_clue {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    box-shadow: inset 0 0 6px black;
+    background-color: green;
+    color: white;
+    transform: rotateY(180deg);
+  }
+  
+  /* .clue.active{
+    box-shadow: inset 0 0 3px black;
+    background: #fff;
+  } */
+  
+  /* .clue div {
+    margin: 2px
+  } */
+  
+  .colClues .clue .inner_clue .front_clue {
+    flex-direction: column;
+  }
+  
