@@ -1,9 +1,8 @@
 :- module(proylcc,
 	[  
 		put/8,
-		checkClue/3,
 		findClue/3,
-		transpose/2
+		gameInitialState/5
 	]).
 
 :-use_module(library(lists)).
@@ -118,3 +117,13 @@ findClue(Clue, [R|Rs], RowSat):-
 % Buscas un '#' para checker la pista 
 findClue(Clue, [_R|Rs], RowSat):-
 	findClue(Clue,Rs,RowSat).
+
+gameInitialState(RowClues, ColClues, Grid, RowsCluesState, ColsCluesState) :-
+	transpose(Grid, GridT),
+	initCluesState(RowClues, Grid, RowsCluesState),
+	initCluesState(ColClues, GridT, ColsCluesState).
+
+initCluesState([], [], []).
+initCluesState([Clue|Clues], [Line|Lines], [ClueState|CluesStates]) :-
+	findClue(Clue, Line, ClueState),
+	initCluesState(Clues, Lines, CluesStates).

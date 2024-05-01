@@ -22,6 +22,8 @@ function Game() {
   const [actualScreen, setActualScreen] = useState(0);
   const [animationWin, setAnimationWin] = useState(false);
 
+  const [selectMode, setSelectMode] = useState(true);
+
   useEffect(() => {
     // Creation of the pengine server instance.    
     // This is executed just once, after the first render.    
@@ -30,75 +32,29 @@ function Game() {
   }, []);
 
   useEffect(() => {
-    if(grid && rowsClues && colsClues){
-      initializeCluesState();
-    }
-  }, [rowsClues, colsClues]);
-
-  useEffect(() => {
     if(actualScreen === 1) checkGameStatus();
   }, [actualScreen, rowsCluesState, colsCluesState]);
 
-  function handleServerReady(instance) {
+  const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init(RowClues, ColumClues, Grid)';
+    const queryS = 'init(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
     pengine.query(queryS, (success, response) => {
+      console.log('query');
       if (success) {
-        setGameStatus(false);
-        setAnimationWin(false);
+        console.log('success', response);
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
-        setColsClues(response['ColumClues']);
-
-        setRowsCluesState(Array(response['RowClues'].length).fill(0));
-        setColsCluesState(Array(response['ColumClues'].length).fill(0));
+        setColsClues(response['ColumnClues']);
+        setRowsCluesState(response['RowCluesStates']);
+        setColsCluesState(response['ColumnCluesStates']);
+      }else{
+        console.log(response);
       }
     });
-  }
-
-  // Refactor
-  const initializeCluesState = () => {
-    rowsClues.forEach((clue, index) => {
-      const row = grid[index];
-      const queryS = `findClue(${JSON.stringify(clue)}, ${JSON.stringify(row)}, RowSat)`;
-      pengine.query(queryS, (success, response) => {
-        if(success){
-          setRowsCluesState((actualValue)=>{
-            let aux = [...actualValue];
-            aux[index] = response['RowSat'];
-            return aux;
-          });
-        }
-      })
-    });
-
-    const queryS = `transpose(${JSON.stringify(grid)},R)`;
-    let transposeGrid;
-    pengine.query(queryS,(success, response) => {
-      transposeGrid = response['R'];
-
-      colsClues.forEach((clue, index) => {
-        const col = transposeGrid[index];
-        const queryS = `findClue(${JSON.stringify(clue)}, ${JSON.stringify(col)}, ColSat)`;
-        pengine.query(queryS, (success, response) => {
-          if(success){
-            setColsCluesState((actualValue)=>{
-              let aux = [...actualValue];
-              aux[index] = response['ColSat'];
-              return aux;
-            });
-          }
-        })
-      });
-    });
-
-  }
-
-  const [selectMode, setSelectMode] = useState(true);
+  };
   function changeMode() {
     setSelectMode(selectMode ? false : true);
   }
-
 
   function handleClick(i, j) {
     // No action on click if we are waiting.
@@ -152,7 +108,7 @@ function Game() {
 
 
   function joinGame() {
-    setActualScreen(2);
+    setActualScreen(1);
   }
   function activeAnimationWin() {
     setAnimationWin(true);
@@ -201,9 +157,6 @@ function Game() {
               />
             </div>
           </div>
-        </div>
-        <div className='screen'>
-          <img src='https://media1.tenor.com/m/wsChytFfrS4AAAAd/monki-flip-monkey.gif' alt='monkey'/>
         </div>
       </div>
       <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
