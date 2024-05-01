@@ -43,10 +43,6 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
 	transpose(NewGrid, NewGridT),
 	checkConditionState([RowN,ColN], RowsClues, ColsClues, NewGrid, NewGridT, RowSat, ColSat).
 
-
-gameStatus(RowsClues,ColsClues,Grid).
-
-
 gameStatus([], [], 1).
 
 gameStatus([R|_Rs], _C, 0) :-

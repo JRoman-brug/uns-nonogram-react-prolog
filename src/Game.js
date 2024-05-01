@@ -37,7 +37,7 @@ function Game() {
 
   useEffect(() => {
     if(actualScreen === 1) checkGameStatus();
-  }, [rowsCluesState, colsCluesState]);
+  }, [actualScreen, rowsCluesState, colsCluesState]);
 
   function handleServerReady(instance) {
     pengine = instance;
@@ -68,7 +68,6 @@ function Game() {
             aux[index] = response['RowSat'];
             return aux;
           });
-          
         }
       })
     });
@@ -88,7 +87,6 @@ function Game() {
               aux[index] = response['ColSat'];
               return aux;
             });
-            
           }
         })
       });
@@ -154,7 +152,7 @@ function Game() {
 
 
   function joinGame() {
-    setActualScreen(1);
+    setActualScreen(2);
   }
   function activeAnimationWin() {
     setAnimationWin(true);
@@ -203,6 +201,9 @@ function Game() {
               />
             </div>
           </div>
+        </div>
+        <div className='screen'>
+          <img src='https://media1.tenor.com/m/wsChytFfrS4AAAAd/monki-flip-monkey.gif' alt='monkey'/>
         </div>
       </div>
       <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
