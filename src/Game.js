@@ -5,6 +5,7 @@ import Modal from './Modal';
 import './styles/game.css'
 import StartButton from './StartButton';
 import Switch from './Switch';
+import UndoButton from './UndoButton';
 
 let pengine;
 
@@ -20,16 +21,31 @@ function Game() {
   const [waiting, setWaiting] = useState(false);
   const [gameStatus, setGameStatus] = useState(false);
 
-  const [actualScreen, setActualScreen] = useState(0);
+  const [actualScreen, setActualScreen] = useState(1);
   const [animationWin, setAnimationWin] = useState(false);
 
   const [selectMode, setSelectMode] = useState(true);
+
+  const [stackMoves, setStackMoves] = useState([]);
+  const [withoutMove, setWithoutMove] = useState(true);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
     // This is executed just once, after the first render.    
     // The callback will run when the server is ready, and it stores the pengine instance in the pengine variable. 
     PengineClient.init(handleServerReady);
+  }, []);
+
+
+  useEffect(() => {
+    const keyListener = (e) => {
+      if (e.key === "C" || e.key === "c") {
+        changeMode();
+      }
+    }
+    window.addEventListener('keydown', keyListener);
+
+    return () => { window.addEventListener('keydown', keyListener); }
   }, []);
 
   useEffect(() => {
@@ -51,8 +67,9 @@ function Game() {
     });
   };
   function changeMode() {
-    console.log("change")
-    setSelectMode(selectMode ? false : true);
+    setSelectMode((value) => {
+      return !value;
+    });
   }
 
   function handleClick(i, j) {
@@ -60,21 +77,28 @@ function Game() {
     if (waiting || gameStatus) {
       return;
     }
-    // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
-    const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-
     let content // Content to put in the clicked square.
     // for select
     if (selectMode) content = "#";
     else content = "X";
+    putQuery(content, i, j);
+
+    let preContent = grid[i][j];
+    addLastMove(preContent, content, i, j);
+  }
+
+  function putQuery(content, i, j) {
+    // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
+    const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
 
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
-    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     setWaiting(true);
+    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
+
 
         let newRowsStates = [...rowsCluesState];
         newRowsStates[i] = response['RowSat'];
@@ -88,7 +112,6 @@ function Game() {
       setWaiting(false);
     });
   }
-
   function checkGameStatus() {
     const rowsCluesStateS = JSON.stringify(rowsCluesState);
     const colsCluesStateS = JSON.stringify(colsCluesState);
@@ -111,6 +134,49 @@ function Game() {
   }
   function activeAnimationWin() {
     setAnimationWin(true);
+  }
+
+  function addLastMove(prevContent, content, i, j) {
+    let cell = {
+      prevContent: prevContent,
+      content: content,
+      i: i,
+      j: j
+    }
+
+    let auxMoves = [...stackMoves];
+    auxMoves.push(cell);
+    setStackMoves(auxMoves);
+    setWithoutMove(false);
+  }
+  function undoMove() {
+    // case 1
+    // _ # -> #
+    // _ X -> X
+    // # # -> #
+    // X X -> X
+
+    // Case 2
+    // X # -> X
+    // # X -> #
+    if (stackMoves.length > 0) {
+      let stackMoveAux = [...stackMoves]
+      let lastMove = stackMoveAux.pop();
+      let firstContentNull = lastMove.prevContent === "_";
+      let sameContent = lastMove.prevContent === lastMove.content;
+      let diferentsContent = (lastMove.prevContent !== "_") && lastMove.prevContent !== lastMove.content;
+
+      let content;
+      let i = lastMove.i;
+      let j = lastMove.j;
+
+      if (firstContentNull || sameContent) content = lastMove.content;
+      else if (diferentsContent) content = lastMove.prevContent;
+      putQuery(content, i, j);
+
+      setStackMoves(stackMoveAux);
+      setWithoutMove(stackMoveAux.length  ===0);
+    }
   }
 
   if (!grid) {
@@ -140,7 +206,7 @@ function Game() {
             <div className="game-info">
               <Switch selectMode={selectMode} change={changeMode} />
 
-
+              <UndoButton undoAction={undoMove} state={withoutMove}/>
             </div>
           </div>
         </div>

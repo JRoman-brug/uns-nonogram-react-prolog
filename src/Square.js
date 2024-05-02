@@ -6,7 +6,7 @@ function Square({ value, onClick, gameStatus, overMouse, leaveMouse, index }) {
     let xMark = value === "X";
     
     return (
-        <button className={`square`} onMouseDown={onClick} onMouseEnter={overMouse} onMouseUp={leaveMouse}>
+        <button className={`square`} onMouseDown={onClick} onMouseEnter={overMouse} onMouseUp={leaveMouse} onDrag={(e)=>e.preventDefault}>
             <div
                 className={`select ${select ? "selectPopIn" : "selectPopOut"} ${gameStatus && select ? "animationSquare" : ""}`}
                 // timing params for brazilian phonk are 500 in square and 2seconds in animation css
