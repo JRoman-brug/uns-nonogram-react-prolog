@@ -2,6 +2,7 @@ import Square from './Square';
 import Clue from './Clue';
 import './styles/board.css'
 import './styles/clue.css'
+import { useState } from 'react';
 
 function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesState, gameStatus }) {
     const numOfRows = grid.length;
@@ -16,6 +17,19 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
             }
         }
         return longitudMaxima;
+    }
+
+    const [clickMouse, setClickMouse] = useState(false);
+
+    function onclickSquare(i,j){
+        setClickMouse(true);
+        onClick(i,j)
+    }
+    function onHoverMouse(i,j){
+        if(clickMouse) onClick(i,j);
+    }
+    function leaveSquare(){
+        setClickMouse(false)
     }
 
     const maxNumClueRow = maxNumClue(rowsClues);
@@ -77,8 +91,12 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
                             value={cell}
                             win={true}
                             onClick={() => {
-                                onClick(i, j);
+                                onclickSquare(i,j)
                             }}
+                            overMouse = {()=>{
+                                onHoverMouse(i,j);
+                            }}
+                            leaveMouse = {leaveSquare}
                             index={cell === "#" ?(i+j) :0}
                             gameStatus={gameStatus}
                             key={i + j}

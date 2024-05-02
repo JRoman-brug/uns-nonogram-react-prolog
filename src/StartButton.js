@@ -3,10 +3,10 @@ import './styles/startButton.css'
 
 function StartButton({ onClick }) {
     return (
-        <button class="pushable"  style={{margin:"10px"}} onMouseUp={onClick}>
-            <span class="shadow"></span>
-            <span class="edge"></span>
-            <span class="front">
+        <button className="pushable"  style={{margin:"10px"}} onMouseUp={onClick}>
+            <span className="shadow"></span>
+            <span className="edge"></span>
+            <span className="front">
                 Play
             </span>
         </button>
