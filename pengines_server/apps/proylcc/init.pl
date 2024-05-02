@@ -1,6 +1,6 @@
 :- module(
     init, 
-    [ init/3, init10x10/3, init10x10Ladder/3, init3x5/3, init5x3/3,initDone/3, initEmpty/3]
+    [ init/3, init10x10/3, init10x10Ladder/3, init3x5/3, init5x3/3,initDone/3, initZero/3,initAllZero/3, initClueTest/3, initAmbiguo/3]
 ).
 
 /**
@@ -21,10 +21,26 @@ init(
     ]
 ).
 
-initEmpty(
-    [[1,1],[2],[2],[1,1]],% RowsClues
-    [[1,1],[2],[2],[1,1]], 	% ColsClues
-    []
+initZero(
+    [[1],[2],[2],[0]],% RowsClues
+    [[1],[2],[2],[0]], 	% ColsClues
+    [
+        [ _, _, _, _],
+        [ _, _, _, _],
+        [ _, _, _, _],
+        [ _, _, _, _]
+    ]
+).
+
+initAllZero(
+    [[0],[0],[0],[0]],% RowsClues
+    [[0],[0],[0],[0]], 	% ColsClues
+    [
+        [ _, _, _, _],
+        [ _, _, _, _],
+        [ _, _, _, _],
+        [ _, _, _, _]
+    ]
 ).
 
 initDone(
@@ -90,6 +106,30 @@ init5x3(
     [[5],[5],[5]], % RowsClues
     [[3],[3],[3],[3],[3]], 	% ColsClues
     [
+        [ _, _, _, _, _],
+        [ _, _, _, _, _],
+        [ _, _, _, _, _]
+    ]
+).
+
+initClueTest(
+    [[1,1,1],[5],[3],[3],[3]],% RowsClues
+    [[3],[3],[5],[1,2],[2,1]],% ColsClues
+    [
+        [ _, _, _, _, _],
+        [ _, _, _, _, _],
+        [ _, _, _, _, _],
+        [ _, _, _, _, _],
+        [ _, _, _, _, _]
+    ]
+).
+
+initAmbiguo(
+    [[1],[1],[1],[1],[1]],% RowsClues
+    [[1],[1],[1],[1],[1]],% ColsClues
+    [
+        [ _, _, _, _, _],
+        [ _, _, _, _, _],
         [ _, _, _, _, _],
         [ _, _, _, _, _],
         [ _, _, _, _, _]

@@ -4,6 +4,7 @@ import Board from './Board';
 import Modal from './Modal';
 import './styles/game.css'
 import Switch from "react-switch";
+import StartButton from './StartButton';
 
 let pengine;
 
@@ -37,18 +38,15 @@ function Game() {
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
+    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
     pengine.query(queryS, (success, response) => {
-      console.log('query');
       if (success) {
-        console.log('success', response);
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumnClues']);
         setRowsCluesState(response['RowCluesStates']);
         setColsCluesState(response['ColumnCluesStates']);
-      }else{
-        console.log(response);
+
       }
     });
   };
@@ -123,7 +121,8 @@ function Game() {
         <div className={`presentation screen`}>
           <h1>NONOGRAM-2024</h1>
           <h2>by Popp-Brugnoni</h2>
-          <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button>
+          <StartButton onClick={joinGame}/>
+          {/* <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button> */}
         </div>
         <div className={`game screen`}>
           <Modal winCondition={gameStatus} activeAnimation={activeAnimationWin} />
