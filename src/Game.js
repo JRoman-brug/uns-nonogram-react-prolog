@@ -27,7 +27,6 @@ function Game() {
   const [selectMode, setSelectMode] = useState(true);
 
   const [stackMoves, setStackMoves] = useState([]);
-  const [withoutMove, setWithoutMove] = useState(true);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -147,7 +146,6 @@ function Game() {
     let auxMoves = [...stackMoves];
     auxMoves.push(cell);
     setStackMoves(auxMoves);
-    setWithoutMove(false);
   }
   function undoMove() {
     // case 1
@@ -175,7 +173,6 @@ function Game() {
       putQuery(content, i, j);
 
       setStackMoves(stackMoveAux);
-      setWithoutMove(stackMoveAux.length  ===0);
     }
   }
 
@@ -206,7 +203,7 @@ function Game() {
             <div className="game-info">
               <Switch selectMode={selectMode} change={changeMode} />
 
-              <UndoButton undoAction={undoMove} state={withoutMove}/>
+              <UndoButton undoAction={undoMove}/>
             </div>
           </div>
         </div>

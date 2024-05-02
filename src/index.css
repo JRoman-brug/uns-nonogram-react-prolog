@@ -58,19 +58,3 @@ body {
   user-select: none;
 }
 
-.presentation .button_joinGame {
-  width: 200px;
-  height: 40px;
-  margin-top: 8px;
-  border: none;
-  background: #d3d3d3;
-  border-radius: 6px;
-  font-size: 20px;
-  transition: 0.5s;
-  color: black;
-}
-
-.presentation .button_joinGame:hover {
-  color: white;
-  background: #09203f;
-}
