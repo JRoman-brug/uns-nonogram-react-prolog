@@ -3,8 +3,8 @@ import PengineClient from './PengineClient';
 import Board from './Board';
 import Modal from './Modal';
 import './styles/game.css'
-import Switch from "react-switch";
 import StartButton from './StartButton';
+import Switch from './Switch';
 
 let pengine;
 
@@ -33,7 +33,7 @@ function Game() {
   }, []);
 
   useEffect(() => {
-    if(actualScreen === 1) checkGameStatus();
+    if (actualScreen === 1) checkGameStatus();
   }, [actualScreen, rowsCluesState, colsCluesState]);
 
   const handleServerReady = (instance) => {
@@ -51,6 +51,7 @@ function Game() {
     });
   };
   function changeMode() {
+    console.log("change")
     setSelectMode(selectMode ? false : true);
   }
 
@@ -93,10 +94,10 @@ function Game() {
     const colsCluesStateS = JSON.stringify(colsCluesState);
     const queryWin = `gameStatus(${rowsCluesStateS}, ${colsCluesStateS}, Res)`;
 
-    if(pengine){
+    if (pengine) {
       pengine.query(queryWin, (success, response) => {
-     
-        if (success){
+
+        if (success) {
           setGameStatus(response['Res'] === 1);
         }
       });
@@ -121,7 +122,7 @@ function Game() {
         <div className={`presentation screen`}>
           <h1>NONOGRAM-2024</h1>
           <h2>by Popp-Brugnoni</h2>
-          <StartButton onClick={joinGame}/>
+          <StartButton onClick={joinGame} />
           {/* <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button> */}
         </div>
         <div className={`game screen`}>
@@ -137,23 +138,9 @@ function Game() {
               onClick={(i, j) => handleClick(i, j)}
             />
             <div className="game-info">
-              <Switch
-                uncheckedIcon={
-                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                    <i className="fa-solid fa-xmark"></i>
-                  </div>
-                }
-                checkedIcon={
-                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                    <i className="fa-solid fa-square"></i>
-                  </div>
-                }
-                checked={selectMode}
-                onChange={changeMode}
-                className="react-switch"
-                height={30}
-                width={60}
-              />
+              <Switch selectMode={selectMode} change={changeMode} />
+
+
             </div>
           </div>
         </div>

@@ -70,7 +70,7 @@ function Board({ grid, rowsClues, colsClues, onClick, rowsCluesState, colsCluesS
 
 
     return (
-        <div className='container' style={styleContainer}>
+        <div className='container' style={styleContainer} onMouseLeave={leaveSquare} onMouseUp={leaveSquare}>
             <div></div>
             <div className="colClues" style={styleColumnsClues}>
                 {colsClues.map((clue, i) =>
