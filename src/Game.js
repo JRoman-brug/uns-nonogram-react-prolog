@@ -21,7 +21,7 @@ function Game() {
   const [waiting, setWaiting] = useState(false);
   const [gameStatus, setGameStatus] = useState(false);
 
-  const [actualScreen, setActualScreen] = useState(1);
+  const [actualScreen, setActualScreen] = useState(0);
   const [animationWin, setAnimationWin] = useState(false);
 
   const [selectMode, setSelectMode] = useState(true);
@@ -203,7 +203,7 @@ function Game() {
             <div className="game-info">
               <Switch selectMode={selectMode} change={changeMode} />
 
-              <UndoButton undoAction={undoMove}/>
+              <UndoButton undoAction={undoMove} disable={gameStatus}/>
             </div>
           </div>
         </div>

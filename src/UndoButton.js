@@ -9,7 +9,6 @@ function UndoButton({ undoAction, disable }) {
     function endAnimation(){
         setStyle(false);
     }
-
     return (
         <button className={`undoButton ${style ?"active":""}`} onClick={undoAction} disabled={disable} onMouseEnter={startAnimation} onAnimationEnd={endAnimation}>
             <div className='iconContainer'>
