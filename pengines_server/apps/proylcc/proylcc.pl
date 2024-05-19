@@ -94,10 +94,10 @@ checkClue(_Clues, _Line	, 0).
 
 
 %---------------------------------------------------------------------------------%
-%
+% TODO: cambiar el predicado a cluesStates
 % gameInitialState(+RowClues, +ColClues, +Grid, -RowsCluesState, -ColsCluesState).
 gameInitialState(RowClues, ColClues, Grid, RowsCluesState, ColsCluesState) :-
-	transpose(Grid, GridT), 
+	transpose(Grid, GridT),
 	initCluesState(RowClues, Grid, RowsCluesState), 
 	initCluesState(ColClues, GridT, ColsCluesState).
 
@@ -114,26 +114,22 @@ initCluesState([Clue|Clues], [Line|Lines], [ClueState|CluesStates]) :-
 %Second phase nonogram solver
 % Preguntar si podemos usar los metodos de lista
 solveNonogram(RowClues, ColClues, SolvedGrid) :-
-	emptyGrid(RowClues, ColClues, SolvedGrid), 
-	solveRows(RowClues, SolvedGrid), 
-	transpose(SolvedGrid, SolvedGridT), 
-	checkCols(ColClues, SolvedGridT).
-	
+	emptyGrid(RowClues, ColClues, EmptyGrid), 
+	generateSolutions(RowClues, EmptyGrid, SolvedGrid),
+	checkWin(RowClues, ColClues, SolvedGrid).
+
 
 % Brute force
-solveRows(RowClues, Grid):-
+solveRows(RowClues, Grid, SolvedGrid) :-
 	% partialSolutions(RowClues, Grid),
 
-	generateSolutions(RowClues, Grid).
+	generateSolutions(RowClues, Grid, SolvedGrid).
 
-generateSolutions([RowC|[]],[GridR|[]]).
-generateSolutions([RowC|RowsC], [Row|GridRs]):-
-	completeRow(RowC, Row), 
-	generateSolutions(RowsC, GridRs).
+generateSolutions([RowC|[]],[GridR|[]], [SolvedRow|[]]):-completeRow(RowC, GridR, SolvedRow).
+generateSolutions([RowC|RowsC], [Row|GridRs], [SolvedRow|Rs]):-
+	completeRow(RowC, Row, SolvedRow), 
+	generateSolutions(RowsC, GridRs, Rs).
 
-
-
-% Second version
 completeRow([],Cells, Cells).
 
 completeRow([0|Clues], [Cell|Cells], R):-
@@ -149,8 +145,8 @@ completeRow([Clue|Clues], [Cell|Cells], [Cell|Cells]):-
 	completeRow([Clue|Clues], Cells, Cells). 
 
 completeClue(0,[],[],[]).
-completeClue(0,[_Cell|Cells],Cells,Cells2).
-completeClue(Clue,[Cell|Cells],Path,["#"|Cells]):-
+completeClue(0,[_Cell|Cells],Cells,_Cells2).
+completeClue(Clue,[_Cell|Cells],Path,["#"|Cells]):-
     Clue>0,
     ClueD is Clue - 1,
     completeClue(ClueD, Cells, Path, Cells).
@@ -171,12 +167,20 @@ createGrid(N, M, [Row|Rest]) :-
 	createGrid(Ns, M, Rest).
 
 createRow(0,[]).
-createRow(M, [[]|Rest]) :-
+createRow(M, [_|Rest]) :-
 	M > 0, Ms is M - 1, 
 	createRow(Ms, Rest).
 
+checkWin(RowClues, ColClues, Grid) :-
+	transpose(Grid, GridT),
+	checkLines(RowClues, Grid), 
+	checkLines(ColClues, GridT).
 
+checkLines([], []).
+checkLines([C|Cs], [L|Ls]) :-
+	findClue(C, L, R),
+	R==1,
+	checkLines(Cs, Ls).
 
-%
 
 
