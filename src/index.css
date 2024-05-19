@@ -16,8 +16,9 @@ body {
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background: rgb(83, 120, 149);
-  background: radial-gradient(circle, #537895 0%, #002e66 70%, #09203f 100%);
+  z-index: 10;
+  /* background: rgb(83, 120, 149);
+  background: radial-gradient(circle, #537895 0%, #002e66 70%, #09203f 100%); */
 }
 
 .activeWindows {
@@ -52,7 +53,7 @@ body {
 }
 
 .presentation h2 {
-  color: #09203f;
+  color: #DBE9EE;
   font-size: 28px;
   margin: 0;
   user-select: none;

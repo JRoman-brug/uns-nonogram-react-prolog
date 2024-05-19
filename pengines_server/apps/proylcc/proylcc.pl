@@ -73,28 +73,21 @@ checkConditionState([RowN, ColN], RowsClues, [_C|Cs], NewGridR, [_NewGridC|NewGr
 findClue([], [], 1).
 findClue([0], [], 1).
 findClue(_Clue, [], 0).
-
 findClue(Clue, [Cell|Cells], Sat) :-
-	Cell == "#",
+	Cell == "#", 
 	checkClue(Clue, [Cell|Cells], Sat).
-
 findClue(Clue, [_Cell|Cells], Sat) :-
 	findClue(Clue, Cells, Sat).
 
 %---------------------------------------------------------------------------------%
 %
 % checkClue(+Clue, +Line, -Sat)
-
 checkClue([0|_Clues], [Cell|_Cells], 0) :-
 	Cell == "#".
-
 checkClue([0|Clues], Line, Sat) :-
 	findClue(Clues, Line, Sat).
-
 checkClue([Clue|Clues], [Cell|Cells], Sat) :-
-	Cell == "#",
-	Clue > 0,
-	ClueD is Clue - 1,
+	Cell == "#", Clue > 0, ClueD is Clue - 1, 
 	checkClue([ClueD|Clues], Cells, Sat).
 
 checkClue(_Clues, _Line	, 0).
@@ -103,7 +96,6 @@ checkClue(_Clues, _Line	, 0).
 %---------------------------------------------------------------------------------%
 %
 % gameInitialState(+RowClues, +ColClues, +Grid, -RowsCluesState, -ColsCluesState).
-
 gameInitialState(RowClues, ColClues, Grid, RowsCluesState, ColsCluesState) :-
 	transpose(Grid, GridT), 
 	initCluesState(RowClues, Grid, RowsCluesState), 
@@ -117,3 +109,74 @@ initCluesState([], [], []).
 initCluesState([Clue|Clues], [Line|Lines], [ClueState|CluesStates]) :-
 	findClue(Clue, Line, ClueState), 
 	initCluesState(Clues, Lines, CluesStates).
+
+
+%Second phase nonogram solver
+% Preguntar si podemos usar los metodos de lista
+solveNonogram(RowClues, ColClues, SolvedGrid) :-
+	emptyGrid(RowClues, ColClues, SolvedGrid), 
+	solveRows(RowClues, SolvedGrid), 
+	transpose(SolvedGrid, SolvedGridT), 
+	checkCols(ColClues, SolvedGridT).
+	
+
+% Brute force
+solveRows(RowClues, Grid):-
+	% partialSolutions(RowClues, Grid),
+
+	generateSolutions(RowClues, Grid).
+
+generateSolutions([RowC|[]],[GridR|[]]).
+generateSolutions([RowC|RowsC], [Row|GridRs]):-
+	completeRow(RowC, Row), 
+	generateSolutions(RowsC, GridRs).
+
+
+
+% Second version
+completeRow([],Cells, Cells).
+
+completeRow([0|Clues], [Cell|Cells], R):-
+	completeRow(Clues, Cells, R). 
+
+% Paint
+completeRow([Clue|Clues], [Cell|Cells], R):-
+	completeClue(Clue,[Cell|Cells],C,R),
+	completeRow(Clues, C,C).
+
+% If fail jump a cell
+completeRow([Clue|Clues], [Cell|Cells], [Cell|Cells]):-
+	completeRow([Clue|Clues], Cells, Cells). 
+
+completeClue(0,[],[],[]).
+completeClue(0,[_Cell|Cells],Cells,Cells2).
+completeClue(Clue,[Cell|Cells],Path,["#"|Cells]):-
+    Clue>0,
+    ClueD is Clue - 1,
+    completeClue(ClueD, Cells, Path, Cells).
+
+
+% L=length of row, P = sum of clues, E = space between clues
+% L-(P+E) = S
+% partialSolutions([RowC|RowsC],[GridR|GridRs]).
+emptyGrid(RowClues, ColClues, SolvedGrid) :-
+	length(RowClues, N), 
+	length(ColClues, M), 
+	createGrid(N, M, SolvedGrid).
+
+createGrid(0,_,[]).
+createGrid(N, M, [Row|Rest]) :-
+	N > 0, 
+	createRow(M, Row), Ns is N - 1, 
+	createGrid(Ns, M, Rest).
+
+createRow(0,[]).
+createRow(M, [[]|Rest]) :-
+	M > 0, Ms is M - 1, 
+	createRow(Ms, Rest).
+
+
+
+%
+
+

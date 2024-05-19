@@ -6,6 +6,7 @@ import './styles/game.css'
 import StartButton from './StartButton';
 import Switch from './Switch';
 import UndoButton from './UndoButton';
+import Background from './Background';
 
 let pengine;
 
@@ -49,11 +50,12 @@ function Game() {
 
   useEffect(() => {
     if (actualScreen === 1) checkGameStatus();
+    // eslint-disable-next-line
   }, [actualScreen, rowsCluesState, colsCluesState]);
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
+    const queryS = 'init10x10Complete(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
@@ -180,36 +182,38 @@ function Game() {
     return null;
   }
   return (
-    <div className='container_game'>
-      <div className='actualScreen' style={{ top: `${actualScreen * -100}vh` }}>
-        <div className={`presentation screen`}>
-          <h1>NONOGRAM-2024</h1>
-          <h2>by Popp-Brugnoni</h2>
-          <StartButton onClick={joinGame} />
-          {/* <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button> */}
-        </div>
-        <div className={`game screen`}>
-          <Modal winCondition={gameStatus} activeAnimation={activeAnimationWin} />
-          <div className='game-container'>
-            <Board
-              grid={grid}
-              rowsClues={rowsClues}
-              colsClues={colsClues}
-              rowsCluesState={rowsCluesState}
-              colsCluesState={colsCluesState}
-              gameStatus={animationWin}
-              onClick={(i, j) => handleClick(i, j)}
-            />
-            <div className="game-info">
-              <Switch selectMode={selectMode} change={changeMode} />
+    <Background>
+      <div className='container_game'>
+        <div className='actualScreen' style={{ top: `${actualScreen * -100}vh` }}>
+          <div className={`presentation screen`}>
+            <h1>NONOGRAM-2024</h1>
+            <h2>by Popp-Brugnoni</h2>
+            <StartButton onClick={joinGame} />
+            {/* <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button> */}
+          </div>
+          <div className={`game screen`}>
+            <Modal winCondition={gameStatus} activeAnimation={activeAnimationWin} />
+            <div className='game-container'>
+              <Board
+                grid={grid}
+                rowsClues={rowsClues}
+                colsClues={colsClues}
+                rowsCluesState={rowsCluesState}
+                colsCluesState={colsCluesState}
+                gameStatus={animationWin}
+                onClick={(i, j) => handleClick(i, j)}
+              />
+              <div className="game-info">
+                <Switch selectMode={selectMode} change={changeMode} />
 
-              <UndoButton undoAction={undoMove} disable={gameStatus}/>
+                <UndoButton undoAction={undoMove} disable={gameStatus} />
+              </div>
             </div>
           </div>
         </div>
+        <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
       </div>
-      <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
-    </div>
+    </Background>
   );
 }
 
