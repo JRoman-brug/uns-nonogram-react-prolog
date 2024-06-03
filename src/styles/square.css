@@ -34,6 +34,7 @@
     }
     
     10% {
+      /* background-color: red; */
       background-color: red;
       transform: scale(1.1) translateY(-10px) translateX(5px);
     }

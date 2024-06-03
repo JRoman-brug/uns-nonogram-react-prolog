@@ -2,21 +2,25 @@
     margin: 0;
     padding: 0;
     background: #09203f;
+    box-shadow: #002e66 inset 0 0 600px;
     /* background: radial-gradient(circle, #537895 0%, #002e66 70%, #09203f 100%); */
     position: relative;
 }
 
 .volcanEffect {
-
     position: absolute;
     top: 0;
     left: 0;
-    --duration: 10s;
+    --duration-1: 15s;
+    --duration-2: 20s;
+    --duration-3: 25s;
+    --duration-4: 30s;
     --easing: linear;
     --c-color-1: rgba(255, 163, 26, .7);
-    --c-color-2: #1a23ff;
-    --c-color-3: #e21bda;
-    --c-color-4: rgba(255, 232, 26, .7);
+    --c-color-2: #a31aff;
+    --c-color-3: #1ef1f8b3;
+    --c-color-4: #1a7dffb3;
+    --aniamtionAlterate: alternate;
     --c-shadow: rgba(255, 223, 87, .5);
     --c-shadow-inset-top: rgba(255, 223, 52, .9);
     --c-shadow-inset-bottom: rgba(255, 250, 215, .8);
@@ -40,36 +44,53 @@
     filter: blur(var(--blur, 100px));
     background: var(--background, transparent);
     transform: translate(var(--x, 0), var(--y, 0)) translateZ(0);
-    animation: var(--animation, none) var(--duration) infinite;
+    animation: var(--animation, none) ease-in-out var(--aniamtionAlterate) infinite;
+    animation-duration: 15s;
 }
 
 .circleBg.circle-1,
-.circleBg.circle-9,
+.circleBg.circle-11,
 .circleBg.circle-10 {
     --background: var(--c-color-4);
 }
 
-.circleBg.circle-3,
-.circleBg.circle-4 {
+.circleBg.circle-9,
+.circleBg.circle-4,
+.circleBg.circle-3 {
     --background: var(--c-color-2);
 }
 
-.circle.circle-5,
-.circleBg.circle-7,
-.circle.circle-6 {
+
+.circleBg.circle-2,
+.circleBg.circle-6,
+.circleBg.circle-7 {
     --background: var(--c-color-3);
 }
 
-.circleBg.circle-2,
 .circleBg.circle-8,
+.circleBg.circle-5,
 .circleBg.circle-12 {
     --background: var(--c-color-1);
 }
 
+.circleBg.circle-13,
+.circleBg.circle-14,
+.circleBg.circle-15 {
+    background-color: #f14343;
+}
+
+
+
 .circleBg.circle-1 {
     --x: 0vw;
-    --y: 40vh;
+    --y: 0vh;
     --animation: circle-1;
+}
+
+@keyframes circle-1 {
+    to {
+        transform: translate(60vw, 60vh) translateZ(0);
+    }
 }
 
 .circleBg.circle-2 {
@@ -78,182 +99,229 @@
     --animation: circle-2;
 }
 
-.circleBg.circle-3 {
-    --x: 12vw;
-    --y: 12vh;
-    --animation: circle-3;
-}
-
-.circleBg.circle-4 {
-    --x: 80vw;
-    --y: 12vh;
-    --animation: circle-4;
-}
-
-.circleBg.circle-5 {
-    --x: 12vw;
-    --y: 4vh;
-    --animation: circle-5;
-}
-
-.circleBg.circle-6 {
-    --x: 56vw;
-    --y: 16vh;
-    --animation: circle-6;
-}
-
-.circleBg.circle-7 {
-    --x: 8vw;
-    --y: 28vh;
-    --animation: circle-7;
-}
-
-.circleBg.circle-8 {
-    --x: 28vw;
-    --y: 4vh;
-    --animation: circle-8;
-}
-
-.circleBg.circle-9 {
-    --x: 20vw;
-    --y: 12vh;
-    --animation: circle-9;
-}
-
-.circleBg.circle-10 {
-    --x: 64vw;
-    --y: 16vh;
-    --animation: circle-10;
-}
-
-.circleBg.circle-11 {
-    --x: 4vw;
-    --y: 4vh;
-    --animation: circle-11;
-}
-
-.circleBg.circle-12 {
-    --x: 52vw;
-    --y: 4vh;
-    --animation: circle-12;
-}
-
-@keyframes circle-1 {
-    33% {
-        transform: translate(0vw, 16vh) translateZ(0);
-    }
-
-    66% {
-        transform: translate(12vw, 64vh) translateZ(0);
-    }
-}
-
 @keyframes circle-2 {
-    33% {
-        transform: translate(80vw, 10vh) translateZ(0);
-    }
-
-    66% {
+    to {
         transform: translate(72vw, 48vh) translateZ(0);
     }
 }
 
-@keyframes circle-3 {
-    33% {
-        transform: translate(20vw, 12vh) translateZ(0);
-    }
+.circleBg.circle-3 {
+    --x: 12vw;
+    --y: 0vh;
+    --animation: circle-3;
+}
 
-    66% {
-        transform: translate(12vw, 4vh) translateZ(0);
+@keyframes circle-3 {
+    to {
+        transform: translate(12vw, 80vh) translateZ(0);
     }
+}
+
+.circleBg.circle-4 {
+    --x: 50vw;
+    --y: 5vh;
+    --duration: 15s;
+    --animation: circle-4;
 }
 
 @keyframes circle-4 {
-    33% {
-        transform: translate(76vw, 12vh) translateZ(0);
+    to {
+        transform: translate(50vw, 80vh) translateZ(0);
     }
+}
 
-    66% {
-        transform: translate(112vw, 8vh) translateZ(0);
-    }
+.circleBg.circle-5 {
+    --x: 10vw;
+    --y: 75vh;
+    --animation: circle-5;
 }
 
 @keyframes circle-5 {
-    33% {
-        transform: translate(84vw, 28vh) translateZ(0);
+    to {
+        transform: translate(70vw, 40vh) translateZ(0);
     }
+}
 
-    66% {
-        transform: translate(40vw, 32vh) translateZ(0);
-    }
+.circleBg.circle-6 {
+    --x: 60vw;
+    --y: 15vh;
+    --animation: circle-6;
 }
 
 @keyframes circle-6 {
-    33% {
-        transform: translate(28vw, 16vh) translateZ(0);
+    to {
+        transform: translate(0vw, 20vh) translateZ(0);
     }
+}
 
-    66% {
-        transform: translate(76vw, 56vh) translateZ(0);
-    }
+.circleBg.circle-7 {
+    --x: 75vw;
+    --y: 10vh;
+    --animation: circle-7;
+    --aniamtionAlterate: normal;
 }
 
 @keyframes circle-7 {
-    33% {
-        transform: translate(8vw, 28vh) translateZ(0);
+    50% {
+        transform: translate(10vw, 25vh) translateZ(0);
     }
 
-    66% {
-        transform: translate(20vw, 60vh) translateZ(0);
+    75% {
+        transform: translate(30vw, 60vh) translateZ(0);
     }
+
+    100% {
+        transform: translate(75vw, 10vh) translateZ(0);
+    }
+}
+
+.circleBg.circle-8 {
+    --x: 100vw;
+    --y: 100vh;
+    --animation: circle-8;
 }
 
 @keyframes circle-8 {
-    33% {
-        transform: translate(32vw, 4vh) translateZ(0);
-    }
-
-    66% {
-        transform: translate(56vw, 20vh) translateZ(0);
+    to {
+        transform: translate(40vw, -20vh) translateZ(0);
     }
 }
 
-@keyframes circle-9 {
-    33% {
-        transform: translate(20vw, 12vh) translateZ(0);
-    }
+.circleBg.circle-9 {
+    --x: 70vw;
+    --y: 80vh;
+    --animation: circle-9;
+}
 
-    66% {
-        transform: translate(80vw, 8vh) translateZ(0);
+@keyframes circle-9 {
+    to {
+        transform: translate(-15vw, 50vh) translateZ(0);
     }
+}
+
+.circleBg.circle-10 {
+    --x: -5vw;
+    --y: 80vh;
+    --animation: circle-10;
+    --animationAlternate: normal;
 }
 
 @keyframes circle-10 {
     33% {
-        transform: translate(68vw, 20vh) translateZ(0);
+        transform: translate(15vw, -10vh) translateZ(0);
     }
 
     66% {
-        transform: translate(100vw, 28vh) translateZ(0);
+        transform: translate(-10vw, 10vh) translateZ(0);
     }
+
+    99% {
+        transform: translate(-5vw, 80vh) translateZ(0);
+    }
+}
+
+.circleBg.circle-11 {
+    --x: 25vw;
+    --y: -10vh;
+    --animation: circle-11;
+    --aniamtionAlternate:normal;
 }
 
 @keyframes circle-11 {
     33% {
-        transform: translate(4vw, 4vh) translateZ(0);
+        transform: translate(35vw, 75vh) translateZ(0);
     }
 
     66% {
-        transform: translate(68vw, 20vh) translateZ(0);
+        transform: translate(45vw, -10vh) translateZ(0);
     }
+    99% {
+        transform: translate(25vw, -10vh) translateZ(0);
+    }
+}
+
+.circleBg.circle-12 {
+    --x: 20vw;
+    --y: -5vh;
+    --animation: circle-12;
+    --aniamtionAlternate:normal;
 }
 
 @keyframes circle-12 {
     33% {
-        transform: translate(56vw, 0vh) translateZ(0);
+        transform: translate(40vw, 85vh) translateZ(0);
     }
 
     66% {
-        transform: translate(60vw, 32vh) translateZ(0);
+        transform: translate(70vw, -10vh) translateZ(0);
+    }
+    99% {
+        transform: translate(20vw, -5vh) translateZ(0);
     }
 }
+
+.circleBg.circle-13{
+    --x: -15vw;
+    --y: -15vh;
+    --animation: circle-13;
+}
+
+@keyframes circle-13 {
+    33% {
+        transform: translate(20vw, 75vh) translateZ(0);
+    }
+
+    66% {
+        transform: translate(40vw, -20vh) translateZ(0);
+    }
+    99% {
+        transform: translate(80vw, 70vh) translateZ(0);
+    }
+}
+.circleBg.circle-14{
+    --x: 60vw;
+    --y: -5vh;
+    --animation: circle-14;
+}
+
+@keyframes circle-14 {
+    33% {
+        transform: translate(10vw, 30vh) translateZ(0);
+    }
+
+    66% {
+        transform: translate(70vw, 70vh) translateZ(0);
+    }
+    99% {
+        transform: translate(60vw, -5vh) translateZ(0);
+    }
+}
+
+.circleBg.large{
+    width: 600px;
+    height: 600px;
+}
+
+.circleBg.medium{
+    width: 450px;
+    height: 450px;
+}
+
+.circleBg.small{
+    width: 300px;
+    height: 300px;
+}
+
+.circleBg.duration1{
+    animation-duration: 20s;
+}
+.circleBg.duration2{
+    animation-duration: 25s;
+}
+.circleBg.duration3{
+    animation-duration: 35s;
+}
+.circleBg.duration4{
+    animation-duration: 40s;
+}
+

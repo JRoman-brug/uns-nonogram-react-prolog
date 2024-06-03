@@ -15,6 +15,7 @@ function Game() {
   // KEYBINDING
   // Use a context for gameStatus
   const [grid, setGrid] = useState(null);
+  const [solvedGrid, setSolvedGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [colsCluesState, setColsCluesState] = useState(null);
@@ -55,7 +56,7 @@ function Game() {
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init10x10Complete(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
+    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
