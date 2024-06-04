@@ -24,8 +24,7 @@
   }
   
   .square .animationSquare {
-    background: red;
-    animation: squareRainbow linear 2s infinite;
+    animation: squareRainbow linear 2s;
   }
   
   @keyframes squareRainbow {

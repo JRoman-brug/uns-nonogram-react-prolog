@@ -6,6 +6,8 @@ import './styles/game.css'
 import StartButton from './StartButton';
 import Switch from './Switch';
 import UndoButton from './UndoButton';
+import HintButton from './HintButton'
+import CompleteGridButton from './CompleteGridButton';
 import Background from './Background';
 
 let pengine;
@@ -15,7 +17,9 @@ function Game() {
   // KEYBINDING
   // Use a context for gameStatus
   const [grid, setGrid] = useState(null);
+  const [auxSolvedGrid, setAuxSolvedGrid] = useState(null);
   const [solvedGrid, setSolvedGrid] = useState(null);
+
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [colsCluesState, setColsCluesState] = useState(null);
@@ -27,6 +31,7 @@ function Game() {
   const [animationWin, setAnimationWin] = useState(false);
 
   const [selectMode, setSelectMode] = useState(true);
+  const [hintMode, setHintMode] = useState(false);
 
   const [stackMoves, setStackMoves] = useState([]);
 
@@ -56,10 +61,20 @@ function Game() {
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates)';
+    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues,ColumnClues,Grid, SolvedGrid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
+        setAuxSolvedGrid(response['Grid']);
+        // for dev
+        let aux = response['SolvedGrid'].map(row=>{
+          return row.map(elem=>{
+            return elem = elem==="_"?"X":elem;
+          }
+          )
+        })
+        console.log(aux)
+        setSolvedGrid(aux);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumnClues']);
         setRowsCluesState(response['RowCluesStates']);
@@ -81,7 +96,11 @@ function Game() {
     }
     let content // Content to put in the clicked square.
     // for select
-    if (selectMode) content = "#";
+    if(hintMode) {
+      content = solvedGrid[i][j]
+      setHintMode(false)
+    }
+    else if (selectMode) content = "#";
     else content = "X";
     putQuery(content, i, j);
 
@@ -100,7 +119,7 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
-
+        setAuxSolvedGrid(response['ResGrid'])
 
         let newRowsStates = [...rowsCluesState];
         newRowsStates[i] = response['RowSat'];
@@ -130,6 +149,18 @@ function Game() {
 
   }
 
+  function showGridSolved(){
+    setAuxSolvedGrid(grid)
+    setGrid(solvedGrid);
+  }
+  function hiddeGridSolved(){
+    setAuxSolvedGrid(auxSolvedGrid)
+    setGrid(auxSolvedGrid);
+  }
+
+  function showHint(){
+    setHintMode(true)
+  }
 
   function joinGame() {
     setActualScreen(1);
@@ -206,7 +237,8 @@ function Game() {
               />
               <div className="game-info">
                 <Switch selectMode={selectMode} change={changeMode} />
-
+                <HintButton onClick = {showHint}/>
+                <CompleteGridButton mouseUpAction={showGridSolved} mouseDownAction={hiddeGridSolved} />
                 <UndoButton undoAction={undoMove} disable={gameStatus} />
               </div>
             </div>

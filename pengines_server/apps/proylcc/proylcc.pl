@@ -1,7 +1,8 @@
 	:- module(proylcc,
 		[  
 			put/8,
-			gameInitialState/5
+			gameInitialState/5,
+			solveNonogram/4
 		]).
 
 	:-use_module(library(lists)).

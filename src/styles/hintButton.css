@@ -1,24 +1,42 @@
-.undoButton {
+.hintButton{
     width: 50px;
     height: 50px;
     border-radius: 6px;
     border: none;
     /* background-color: #d3d3d3; */
     background-color: transparent;
-    transition: 1s;
+    transition: 0.5s;
     position: relative;
-    
+
     display: flex;
     justify-content: center;
     align-content: center;
     padding: 0;
 }
 
-
-.undoButton.active{
-    animation: hoverAnimation .5s ease-in-out;
+.iconContainer{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-@keyframes hoverAnimation {
+.hintButton .icon {
+    fill: #020716;
+    width: 40px;
+    height: 40px;
+    transition: 0.5s;
+}
+
+.hintButton:focus .icon{
+    filter: drop-shadow( 0 0 8px #ecdc4e);
+}
+.hintButton:hover .icon{
+    animation: focusAnimation .5s ease-in-out;
+}
+
+@keyframes focusAnimation {
     0%{
         transform: scale(1);
     }
@@ -30,28 +48,5 @@
     }
     100%{
         transform: scale(1);
-    }
-}
-.iconContainer{
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.icon {
-    fill: #020716;
-    width: 40px;
-    height: 40px;
-}
-
-.undoButton.active .icon {
-    animation: rotate .5s ease-in-out;
-}
-
-@keyframes rotate {
-    to {
-        transform: rotate(-360deg);
     }
 }

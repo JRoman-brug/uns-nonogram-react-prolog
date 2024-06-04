@@ -264,18 +264,28 @@
     --x: -15vw;
     --y: -15vh;
     --animation: circle-13;
+    --aniamtionAlternate:normal;
 }
 
 @keyframes circle-13 {
-    33% {
+    10% {
         transform: translate(20vw, 75vh) translateZ(0);
     }
 
-    66% {
+    20% {
         transform: translate(40vw, -20vh) translateZ(0);
     }
-    99% {
+    30% {
         transform: translate(80vw, 70vh) translateZ(0);
+    }
+    40% {
+        transform: translate(40vw, -20vh) translateZ(0);
+    }
+    50% {
+        transform: translate(20vw, 75vh) translateZ(0);
+    }
+    60% {
+        transform: translate(-15vh, -15vh) translateZ(0);
     }
 }
 .circleBg.circle-14{
