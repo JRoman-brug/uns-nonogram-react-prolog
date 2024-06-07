@@ -61,7 +61,7 @@ function Game() {
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues,ColumnClues,Grid, SolvedGrid)';
+    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues, ColumnClues, Grid, SolvedGrid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
@@ -73,7 +73,6 @@ function Game() {
           }
           )
         })
-        console.log(aux)
         setSolvedGrid(aux);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumnClues']);
@@ -96,7 +95,7 @@ function Game() {
     }
     let content // Content to put in the clicked square.
     // for select
-    if(hintMode) {
+    if(hintMode && grid[i][j]!==solvedGrid[i][j]) {
       content = solvedGrid[i][j]
       setHintMode(false)
     }
