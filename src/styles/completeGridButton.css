@@ -28,7 +28,9 @@
     height: 40px;
     transition: 0.2s;
 }
-
+.completeGrid.active .icon{
+    fill: white;
+}
 .completeGrid:hover .icon{
     animation: focusAnimation .5s ease-in-out;
 }

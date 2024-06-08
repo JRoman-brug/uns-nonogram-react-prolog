@@ -38,8 +38,6 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 300px;
-    height: 300px;
     border-radius: 50%;
     filter: blur(var(--blur, 100px));
     background: var(--background, transparent);
@@ -308,18 +306,18 @@
 }
 
 .circleBg.large{
-    width: 600px;
-    height: 600px;
+    width: 85vh;
+    height: 85vh;
 }
 
 .circleBg.medium{
-    width: 450px;
-    height: 450px;
+    width: 65vh;
+    height: 65vh;
 }
 
 .circleBg.small{
-    width: 300px;
-    height: 300px;
+    width: 40vh;
+    height: 40vh;
 }
 
 .circleBg.duration1{

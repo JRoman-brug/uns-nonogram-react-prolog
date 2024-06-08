@@ -7,7 +7,6 @@ function Background({ children }) {
     return (
         <div className='Background'>
             <div className='volcanEffect'>
-             
                 <div className="circleBg circle-14 small duration1"></div> 
                 <div className="circleBg circle-13 large duration3"></div>
                 <div className="circleBg circle-12 large duration4"></div>
@@ -21,7 +20,7 @@ function Background({ children }) {
                 <div className="circleBg circle-4 duration4"></div>
                 <div className="circleBg circle-3 small"></div>
                 <div className="circleBg circle-2 large duration2"></div>
-                <div className="circleBg circle-1 duration1"></div>
+                <div className="circleBg circle-1 small duration1"></div>
             </div>
             {children}
         </div>

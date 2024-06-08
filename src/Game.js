@@ -32,6 +32,7 @@ function Game() {
 
   const [selectMode, setSelectMode] = useState(true);
   const [hintMode, setHintMode] = useState(false);
+  const [showedSolution, setShowedSolution] = useState(false);
 
   const [stackMoves, setStackMoves] = useState([]);
 
@@ -66,14 +67,7 @@ function Game() {
       if (success) {
         setGrid(response['Grid']);
         setAuxSolvedGrid(response['Grid']);
-        // for dev
-        let aux = response['SolvedGrid'].map(row=>{
-          return row.map(elem=>{
-            return elem = elem==="_"?"X":elem;
-          }
-          )
-        })
-        setSolvedGrid(aux);
+        setSolvedGrid(response['SolvedGrid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumnClues']);
         setRowsCluesState(response['RowCluesStates']);
@@ -90,12 +84,12 @@ function Game() {
 
   function handleClick(i, j) {
     // No action on click if we are waiting.
-    if (waiting || gameStatus) {
+    if (waiting || gameStatus || showedSolution) {
       return;
     }
     let content // Content to put in the clicked square.
     // for select
-    if(hintMode && grid[i][j]!==solvedGrid[i][j]) {
+    if(hintMode && grid[i][j] == "_") {
       content = solvedGrid[i][j]
       setHintMode(false)
     }
@@ -151,8 +145,10 @@ function Game() {
   function showGridSolved(){
     setAuxSolvedGrid(grid)
     setGrid(solvedGrid);
+    setShowedSolution(true);
   }
   function hiddeGridSolved(){
+    setShowedSolution(false);
     setAuxSolvedGrid(auxSolvedGrid)
     setGrid(auxSolvedGrid);
   }
@@ -237,7 +233,7 @@ function Game() {
               <div className="game-info">
                 <Switch selectMode={selectMode} change={changeMode} />
                 <HintButton onClick = {showHint}/>
-                <CompleteGridButton mouseUpAction={showGridSolved} mouseDownAction={hiddeGridSolved} />
+                <CompleteGridButton activeAction={showGridSolved} inactiveAction={hiddeGridSolved} />
                 <UndoButton undoAction={undoMove} disable={gameStatus} />
               </div>
             </div>

@@ -31,6 +31,7 @@
 
 .hintButton:focus .icon{
     filter: drop-shadow( 0 0 8px #ecdc4e);
+    fill: white;
 }
 .hintButton:hover .icon{
     animation: focusAnimation .5s ease-in-out;
