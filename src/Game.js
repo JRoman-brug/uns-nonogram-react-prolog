@@ -9,6 +9,8 @@ import UndoButton from './UndoButton';
 import HintButton from './HintButton'
 import CompleteGridButton from './CompleteGridButton';
 import Background from './Background';
+import Loading from './Loading';
+
 
 let pengine;
 
@@ -33,7 +35,6 @@ function Game() {
   const [selectMode, setSelectMode] = useState(true);
   const [hintMode, setHintMode] = useState(false);
   const [showedSolution, setShowedSolution] = useState(false);
-
   const [stackMoves, setStackMoves] = useState([]);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ function Game() {
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues, ColumnClues, Grid, SolvedGrid)';
+    const queryS = 'init12x12(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues, ColumnClues, Grid, SolvedGrid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
@@ -89,7 +90,7 @@ function Game() {
     }
     let content // Content to put in the clicked square.
     // for select
-    if(hintMode && grid[i][j] == "_") {
+    if (hintMode && grid[i][j] === "_") {
       content = solvedGrid[i][j]
       setHintMode(false)
     }
@@ -142,18 +143,18 @@ function Game() {
 
   }
 
-  function showGridSolved(){
+  function showGridSolved() {
     setAuxSolvedGrid(grid)
     setGrid(solvedGrid);
     setShowedSolution(true);
   }
-  function hiddeGridSolved(){
+  function hiddeGridSolved() {
     setShowedSolution(false);
     setAuxSolvedGrid(auxSolvedGrid)
     setGrid(auxSolvedGrid);
   }
 
-  function showHint(){
+  function showHint() {
     setHintMode(true)
   }
 
@@ -206,7 +207,7 @@ function Game() {
   }
 
   if (!grid) {
-    return null;
+    return <Loading/>
   }
   return (
     <Background>
@@ -232,14 +233,13 @@ function Game() {
               />
               <div className="game-info">
                 <Switch selectMode={selectMode} change={changeMode} />
-                <HintButton onClick = {showHint}/>
+                <HintButton onClick={showHint} />
                 <CompleteGridButton activeAction={showGridSolved} inactiveAction={hiddeGridSolved} />
-                <UndoButton undoAction={undoMove} disable={gameStatus} />
+                <UndoButton undoAction={undoMove} disable={gameStatus || showGridSolved} />
               </div>
             </div>
           </div>
         </div>
-        <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
       </div>
     </Background>
   );

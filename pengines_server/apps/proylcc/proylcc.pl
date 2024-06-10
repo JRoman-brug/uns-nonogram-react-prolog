@@ -8,6 +8,7 @@
 :-use_module(library(lists)).
 :-use_module(library(clpfd)).
 
+
 %---------------------------------------------------------------------------------%
 %
 % replace(?X, +XIndex, +Y, +Xs, -XsY)
@@ -68,14 +69,14 @@ checkConditionState([RowN, ColN], RowsClues, [_C|Cs], NewGridR, [_NewGridC|NewGr
 %
 % findClue(+Clue, +Line, -Sat)
 
-findClue([], [], 1).
-findClue([0], [], 1).
+findClue([], [], 1):-!.
+findClue([0], [], 1):-!.
 findClue(_Clue, [], 0).
 findClue(Clue, [Cell|Cells], Sat) :-
 	Cell == "#", 
-	checkClue(Clue, [Cell|Cells], Sat).
+	checkClue(Clue, [Cell|Cells], Sat),!.
 findClue(Clue, [_Cell|Cells], Sat) :-
-	findClue(Clue, Cells, Sat).
+	findClue(Clue, Cells, Sat),!.
 
 %---------------------------------------------------------------------------------%
 %
@@ -83,12 +84,12 @@ findClue(Clue, [_Cell|Cells], Sat) :-
 checkClue([0|_Clues], [Cell|_Cells], 0) :-
 	Cell == "#".
 checkClue([0|Clues], Line, Sat) :-
-	findClue(Clues, Line, Sat).
+	findClue(Clues, Line, Sat),!.
 checkClue([Clue|Clues], [Cell|Cells], Sat) :-
 	Cell == "#", Clue > 0, ClueD is Clue - 1, 
-	checkClue([ClueD|Clues], Cells, Sat).
+	checkClue([ClueD|Clues], Cells, Sat),!.
 
-checkClue(_Clues, _Line	, 0).
+checkClue(_Clues, _Line	, 0):-!.
 
 
 %---------------------------------------------------------------------------------%
@@ -117,14 +118,15 @@ solveNonogram(RowClues, ColClues, Grid, SolvedGrid) :-
 	checkWin(RowClues, ColClues, SolvedGrid).
 
 % ------------------------------- generateSolutions/3 ---------------------------------------------------
-generateSolutions([RowC|[]], [GridR|[]], [SolvedRow|[]]):-
-	completeRow(RowC, GridR, SolvedRow).
+% generateSolutions(+RowsClues, +Grid, -SolveGrid).
+generateSolutions([], [], []).
 generateSolutions([RowC|RowsC], [Row|GridRs], [SolvedRow|Rs]):-
 	completeRow(RowC, Row, SolvedRow), 
 	generateSolutions(RowsC, GridRs, Rs).
 
 
 % ------------------------------- completeRow/3 ---------------------------------------------------
+% completeRow(+Clues, +Row, -SolvedRow).
 completeRow([], [], []).
 completeRow([0], [], []).
 completeRow(Clues, Row, Res) :-
@@ -134,6 +136,7 @@ completeRow(Clues, [Cell|Cells], ["X"|Res]) :-
 	completeRow(Clues, Cells, Res).
 
 % ------------------------------- completeClue/3 ---------------------------------------------------
+% completeClue(+Clues, +Row, -SolvedRow).
 completeClue([0], [], []).
 completeClue([0|Clues], [Cell|Cells], ["X"|Rs]) :-
 	Cell \== "#",
@@ -143,18 +146,21 @@ completeClue([Clue|Clues], [Cell|Cells], ["#"|Rs]) :-
 	completeClue([ClueD|Clues], Cells, Rs).
 
 % ------------------------------- CheckWin/3 ---------------------------------------------------
+% checkWin(+RowClues, +ColClues, +Grid).
 checkWin(RowClues, ColClues, Grid) :-
 	transpose(Grid, GridT), 
 	checkLines(RowClues, Grid), 
 	checkLines(ColClues, GridT).
 
 % ------------------------------- checkLines/2 ---------------------------------------------------
+% checkLines(+Clues, +Line).
 checkLines([], []).
 checkLines([C|Cs], [L|Ls]) :-
 	findClue(C, L, R), R == 1, 
 	checkLines(Cs, Ls).
 
 % ------------------------------- partialSolutions/4 ---------------------------------------------------
+% checkLines(+RowsClues, +ColsClues, Grid, PartialGrid).
 partialSolutions(RowsC, ColsC, [Row|Rows], PartialGrid) :-
 	length(Row, RowLength), 
 	generatePartialLines(RowsC, [Row|Rows], RowLength, PartialRows), 
@@ -164,6 +170,7 @@ partialSolutions(RowsC, ColsC, [Row|Rows], PartialGrid) :-
 	transpose(PartialCols, PartialGrid).
 
 % ------------------------------- generatePartialLines/4 ---------------------------------------------------
+% generatePartialLines(+RowsClues, +Grid, +Length, -PartiarLine).
 generatePartialLines([], [], _, []).
 generatePartialLines([Clue|Clues], [Line|Lines], Length, [PLine|PLines]) :-
 	cluesLength(Clue, P), S is Length - P, 
@@ -192,4 +199,6 @@ generateLine([Clue|Clues], [Cell|Cells], S, ST, [Cell|PCells]) :-
 cluesLength([Clue|[]], Clue) :- !.
 cluesLength([Clue|Clues], L) :-
 	cluesLength(Clues, Ls), L is Clue + 1 + Ls.
+
+
 
