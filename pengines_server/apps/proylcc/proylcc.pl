@@ -199,6 +199,3 @@ generateLine([Clue|Clues], [Cell|Cells], S, ST, [Cell|PCells]) :-
 cluesLength([Clue|[]], Clue) :- !.
 cluesLength([Clue|Clues], L) :-
 	cluesLength(Clues, Ls), L is Clue + 1 + Ls.
-
-
-

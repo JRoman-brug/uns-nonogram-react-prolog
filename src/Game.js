@@ -207,7 +207,7 @@ function Game() {
   }
 
   if (!grid) {
-    return <Loading/>
+    return <Loading />
   }
   return (
     <Background>
@@ -217,7 +217,6 @@ function Game() {
             <h1>NONOGRAM-2024</h1>
             <h2>by Popp-Brugnoni</h2>
             <StartButton onClick={joinGame} />
-            {/* <button className='button_joinGame' onClick={joinGame}><span>PLAY</span></button> */}
           </div>
           <div className={`game screen`}>
             <Modal winCondition={gameStatus} activeAnimation={activeAnimationWin} />
@@ -239,7 +238,9 @@ function Game() {
               </div>
             </div>
           </div>
+
         </div>
+        <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
       </div>
     </Background>
   );

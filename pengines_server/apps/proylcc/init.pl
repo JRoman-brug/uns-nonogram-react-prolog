@@ -1,6 +1,6 @@
 :- module(
     init, 
-    [ init/3, init10x10/3, init10x10Ladder/3, init3x5/3, init5x3/3,initDone/3, initZero/3,initAllZero/3, initClueTest/3, initAmbiguo/3, init10x10Complete/3, init20x20/3, init12x12/3]
+    [ init/3, init10x10/3, init10x10Ladder/3, init3x5/3, init5x3/3,initDone/3, initZero/3,initAllZero/3, initClueTest/3, initAmbiguo/3, init10x10Complete/3, init20x20/3, init12x12/3,init15x15/3]
 ).
 
 /**
