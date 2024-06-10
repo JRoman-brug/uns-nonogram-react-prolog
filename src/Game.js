@@ -64,11 +64,12 @@ function Game() {
   const handleServerReady = (instance) => {
     pengine = instance;
     const queryS = 'init12x12(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues, ColumnClues, Grid, SolvedGrid)';
+
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
-        setAuxSolvedGrid(response['Grid']);
-        setSolvedGrid(response['SolvedGrid']);
+        //setAuxSolvedGrid(response['Grid']);
+        //setSolvedGrid(response['SolvedGrid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumnClues']);
         setRowsCluesState(response['RowCluesStates']);
@@ -88,16 +89,17 @@ function Game() {
     if (waiting || gameStatus || showedSolution) {
       return;
     }
-    let content // Content to put in the clicked square.
-    // for select
-    if (hintMode && grid[i][j] === "_") {
-      content = solvedGrid[i][j]
-      setHintMode(false)
-    }
-    else if (selectMode) content = "#";
-    else content = "X";
-    putQuery(content, i, j);
+    let content; // Content to put in the clicked square.
 
+    if(hintMode) {
+      if(grid[i][j] !== solvedGrid[i][j])
+        content = solvedGrid[i][j];
+      setHintMode(false);
+    }else{
+      content = selectMode ? "#" : "X";
+    }
+    if(content)
+      putQuery(content, i, j);
     let preContent = grid[i][j];
     addLastMove(preContent, content, i, j);
   }
@@ -240,7 +242,6 @@ function Game() {
           </div>
 
         </div>
-        <img className='activeWindows' src={require(`./resouces/activeWindows.png`)} alt="" />
       </div>
     </Background>
   );
