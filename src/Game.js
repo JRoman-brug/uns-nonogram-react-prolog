@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import PengineClient from './PengineClient';
-import Board from './Board';
-import Modal from './Modal';
-import './styles/game.css'
-import StartButton from './StartButton';
-import Switch from './Switch';
-import UndoButton from './UndoButton';
-import HintButton from './HintButton'
-import CompleteGridButton from './CompleteGridButton';
-import Background from './Background';
-import Loading from './Loading';
-
+import React, { useEffect, useState } from "react";
+import PengineClient from "./PengineClient";
+import Board from "./Board";
+import Modal from "./Modal";
+import "./styles/game.css";
+import StartButton from "./StartButton";
+import Switch from "./Switch";
+import UndoButton from "./UndoButton";
+import HintButton from "./HintButton";
+import CompleteGridButton from "./CompleteGridButton";
+import Background from "./Background";
+import Loading from "./Loading";
 
 let pengine;
 
@@ -38,22 +37,23 @@ function Game() {
   const [stackMoves, setStackMoves] = useState([]);
 
   useEffect(() => {
-    // Creation of the pengine server instance.    
-    // This is executed just once, after the first render.    
-    // The callback will run when the server is ready, and it stores the pengine instance in the pengine variable. 
+    // Creation of the pengine server instance.
+    // This is executed just once, after the first render.
+    // The callback will run when the server is ready, and it stores the pengine instance in the pengine variable.
     PengineClient.init(handleServerReady);
   }, []);
-
 
   useEffect(() => {
     const keyListener = (e) => {
       if (e.key === "C" || e.key === "c") {
         changeMode();
       }
-    }
-    window.addEventListener('keydown', keyListener);
+    };
+    window.addEventListener("keydown", keyListener);
 
-    return () => { window.addEventListener('keydown', keyListener); }
+    return () => {
+      window.addEventListener("keydown", keyListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -63,18 +63,18 @@ function Game() {
 
   const handleServerReady = (instance) => {
     pengine = instance;
-    const queryS = 'init12x12(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues, ColumnClues, Grid, SolvedGrid)';
+    const queryS =
+      "init10x10(RowClues, ColumnClues, Grid), gameInitialState(RowClues, ColumnClues, Grid, RowCluesStates, ColumnCluesStates),solveNonogram(RowClues, ColumnClues, Grid, SolvedGrid)";
 
     pengine.query(queryS, (success, response) => {
       if (success) {
-        setGrid(response['Grid']);
+        setGrid(response["Grid"]);
         //setAuxSolvedGrid(response['Grid']);
         //setSolvedGrid(response['SolvedGrid']);
-        setRowsClues(response['RowClues']);
-        setColsClues(response['ColumnClues']);
-        setRowsCluesState(response['RowCluesStates']);
-        setColsCluesState(response['ColumnCluesStates']);
-
+        setRowsClues(response["RowClues"]);
+        setColsClues(response["ColumnClues"]);
+        setRowsCluesState(response["RowCluesStates"]);
+        setColsCluesState(response["ColumnCluesStates"]);
       }
     });
   };
@@ -91,22 +91,20 @@ function Game() {
     }
     let content; // Content to put in the clicked square.
 
-    if(hintMode) {
-      if(grid[i][j] !== solvedGrid[i][j])
-        content = solvedGrid[i][j];
+    if (hintMode) {
+      if (grid[i][j] !== solvedGrid[i][j]) content = solvedGrid[i][j];
       setHintMode(false);
-    }else{
+    } else {
       content = selectMode ? "#" : "X";
     }
-    if(content)
-      putQuery(content, i, j);
+    if (content) putQuery(content, i, j);
     let preContent = grid[i][j];
     addLastMove(preContent, content, i, j);
   }
 
   function putQuery(content, i, j) {
-    // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
-    const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
+    // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.
+    const squaresS = JSON.stringify(grid).replaceAll('"_"', "_"); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
 
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
@@ -114,15 +112,15 @@ function Game() {
     const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     pengine.query(queryS, (success, response) => {
       if (success) {
-        setGrid(response['ResGrid']);
-        setAuxSolvedGrid(response['ResGrid'])
+        setGrid(response["ResGrid"]);
+        setAuxSolvedGrid(response["ResGrid"]);
 
         let newRowsStates = [...rowsCluesState];
-        newRowsStates[i] = response['RowSat'];
+        newRowsStates[i] = response["RowSat"];
         setRowsCluesState(newRowsStates);
 
         let newClueStates = [...colsCluesState];
-        newClueStates[j] = response['ColSat'];
+        newClueStates[j] = response["ColSat"];
         setColsCluesState(newClueStates);
       }
 
@@ -136,28 +134,26 @@ function Game() {
 
     if (pengine) {
       pengine.query(queryWin, (success, response) => {
-
         if (success) {
-          setGameStatus(response['Res'] === 1);
+          setGameStatus(response["Res"] === 1);
         }
       });
     }
-
   }
 
   function showGridSolved() {
-    setAuxSolvedGrid(grid)
+    setAuxSolvedGrid(grid);
     setGrid(solvedGrid);
     setShowedSolution(true);
   }
   function hiddeGridSolved() {
     setShowedSolution(false);
-    setAuxSolvedGrid(auxSolvedGrid)
+    setAuxSolvedGrid(auxSolvedGrid);
     setGrid(auxSolvedGrid);
   }
 
   function showHint() {
-    setHintMode(true)
+    setHintMode(true);
   }
 
   function joinGame() {
@@ -172,8 +168,8 @@ function Game() {
       prevContent: prevContent,
       content: content,
       i: i,
-      j: j
-    }
+      j: j,
+    };
 
     let auxMoves = [...stackMoves];
     auxMoves.push(cell);
@@ -190,11 +186,13 @@ function Game() {
     // X # -> X
     // # X -> #
     if (stackMoves.length > 0) {
-      let stackMoveAux = [...stackMoves]
+      let stackMoveAux = [...stackMoves];
       let lastMove = stackMoveAux.pop();
       let firstContentNull = lastMove.prevContent === "_";
       let sameContent = lastMove.prevContent === lastMove.content;
-      let diferentsContent = (lastMove.prevContent !== "_") && lastMove.prevContent !== lastMove.content;
+      let diferentsContent =
+        lastMove.prevContent !== "_" &&
+        lastMove.prevContent !== lastMove.content;
 
       let content;
       let i = lastMove.i;
@@ -209,20 +207,26 @@ function Game() {
   }
 
   if (!grid) {
-    return <Loading />
+    return <Loading />;
   }
   return (
     <Background>
-      <div className='container_game'>
-        <div className='actualScreen' style={{ top: `${actualScreen * -100}vh` }}>
+      <div className="container_game">
+        <div
+          className="actualScreen"
+          style={{ top: `${actualScreen * -100}vh` }}
+        >
           <div className={`presentation screen`}>
             <h1>NONOGRAM-2024</h1>
             <h2>by Popp-Brugnoni</h2>
             <StartButton onClick={joinGame} />
           </div>
           <div className={`game screen`}>
-            <Modal winCondition={gameStatus} activeAnimation={activeAnimationWin} />
-            <div className='game-container'>
+            <Modal
+              winCondition={gameStatus}
+              activeAnimation={activeAnimationWin}
+            />
+            <div className="game-container">
               <Board
                 grid={grid}
                 rowsClues={rowsClues}
@@ -235,12 +239,17 @@ function Game() {
               <div className="game-info">
                 <Switch selectMode={selectMode} change={changeMode} />
                 <HintButton onClick={showHint} />
-                <CompleteGridButton activeAction={showGridSolved} inactiveAction={hiddeGridSolved} />
-                <UndoButton undoAction={undoMove} disable={gameStatus || showGridSolved} />
+                <CompleteGridButton
+                  activeAction={showGridSolved}
+                  inactiveAction={hiddeGridSolved}
+                />
+                <UndoButton
+                  undoAction={undoMove}
+                  disable={gameStatus || showGridSolved}
+                />
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </Background>

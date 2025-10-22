@@ -1,46 +1,75 @@
-# Tic tac toe en React + Prolog
+# Nonogram Solver (Proyecto Académico) | `uns-nonogram-react-prolog`
 
-Implementación de un tic-tac-toe interactivo, usando React del lado del cliente, y Prolog del lado del servidor.
+![[Agrega un GIF o Screenshot de tu juego Nonograma aquí]](./assets/lcc.png)
 
-## Para correr el proyecto
+Este es un juego web para resolver "Nonogramas" (también conocidos como Picross o Griddlers), desarrollado para la materia **Lógica para Ciencias de la Computación (5704)** en la Universidad Nacional del Sur (UNS).
 
-### Setup y ejecución del servidor Pengines
-- [Descargar](https://www.swi-prolog.org/Download.html) e instalar el SWI-Prolog.
+El proyecto consiste en una aplicación _full-stack_ que utiliza **React** para la interfaz de usuario y **Prolog** en el backend como un motor de lógica declarativa para procesar y resolver los puzzles. El objetivo era aplicar teorías lógico-matemáticas (como la lógica proposicional) en un problema práctico.
 
-- Levantar el servidor ejecutando en SWI-Prolog el `run.pl` en la carpeta `pengines_server`: 
+---
 
-  `cd pengines_server`\
-  `swipl run.pl`
-  
-  o haciendo doble click sobre el `run.pl`.
+### 👥 Autores y Equipo
 
-  Aclaración: no hacer `swipl pengines_server/run.pl` porque algunas referencias luego no funcionan.
+_(Ajusta esto según si lo hiciste solo o en equipo)_
 
-  La primera vez que se ejecute el run.pl se pedirá definir un username y un password para acceder a la consola web admin del servidor, elegir cualquiera (por ejemplo, username: 'lcc' y password: 'lccdcic'), pero no dejar vacíos.
+- **Juan Román Brugnoni** ([@JRoman-brug](https://github.com/JRoman-brug))
+- **Franco Agustín Popp** ([@FrancoPopp](https://github.com/FrancoPopp))
 
-- El servidor escuchará en http://localhost:3030
+---
 
-- Ir a http://localhost:3030/admin/server.html para ver la consola web admin.
+### 🛠️ Stack Tecnológico
 
-- La carpeta `pengines-master/apps/proylcc` contiene el código prolog del tic tac toe. Cada vez que se modifica este código es necesario bajar y volver a levantar el servidor para que se reflejen los cambios.
+- **Frontend:** React, JavaScript, HTML5, CSS3
+- **Backend:** Prolog
+- **[Middleware/API]**: [Menciona cómo conectaste React y Prolog. ¿Fue con un servidor de Node.js/Express que ejecutaba el script de Prolog? ¿O una herramienta específica de Prolog?]
+- **Control de Versiones:** Git
 
-### Setup y ejecución de la aplicación React
+---
 
-- Descargar una versión reciente de [Node.js](https://nodejs.org/en/).
+### 🎮 Gameplay y Características
 
-- Ejecutar 
+El juego cuenta con una interfaz limpia donde el usuario puede resolver los puzzles. El motor lógico en Prolog se encarga de...
 
-  `npm install` 
+![Screenshot del Tablero de Juego](./assets/lcc2.png) ---
 
-  en el directorio del proyecto (`tic-tac-toe`) para instalar las dependencias (librerías)
-localmente, en la carpeta `node_modules`.
+### 🚀 Cómo Ejecutar el Proyecto
 
-- Ejecutar
+_(Esta sección es crucial. Debes detallar cómo correr AMBAS partes, el backend de Prolog y el frontend de React. Esto es un ejemplo general)._
 
-    `npm start`
+#### 1. Backend (Prolog)
 
-    en el directorio del proyecto para correr la app en modo desarrollo.
+1.  Navegar a la carpeta del backend: `cd pengines_server`
+2.  Tener instalado un intérprete de Prolog (ej. [SWI-Prolog](https://www.swi-prolog.org/)).
+3.  Ejecutas el run.pl
+    ```bash
+    # Ingresar a la carpeta pengines_server
+    cd pengines_server
+    # Cargar el archivo principal en el intérprete
+    swipl run.pl
+    ```
 
-- Abrir [http://localhost:3000](http://localhost:3000) para ver la aplicación en el browser.
+#### 2. Frontend (React)
 
-- La página se refresca automáticamente cuando cambia el código.
+1.  Navegar a la carpeta del frontend: `cd frontend-react`
+2.  Instalar las dependencias:
+    ```bash
+    npm install
+    ```
+3.  Iniciar la aplicación de desarrollo:
+    ```bash
+    npm start
+    ```
+4.  Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
+
+---
+
+### 💡 Lecciones Aprendidas
+
+Este proyecto fue un desafío fascinante al integrar dos paradigmas de programación completamente distintos.
+
+- **Integración de Paradigmas:** Logramos conectar una aplicación web moderna, basada en componentes y estado (React), con un backend de programación lógica declarativa (Prolog).
+- **Lógica Aplicada:** Pude aplicar directamente los conceptos teóricos de la materia (lógica proposicional) para construir un _solver_ funcional.
+- **Mejora de Rendimiento (Futuro):** El _solver_ actual funciona bien para tableros pequeños.
+  - **Mejora a futuro:** Como siguiente paso, optimizaría el motor de Prolog implementando **heurísticas** para reducir el espacio de búsqueda y mejorar drásticamente los tiempos de cómputo en tableros de gran tamaño.
+- **Flujo de Trabajo (Futuro):**
+  - **Mejora a futuro:** Implementaría un **flujo de trabajo de Git** más estructurado para gestionar las _features_ del frontend y los cambios en el motor lógico del backend de forma independiente y ordenada.
