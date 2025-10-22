@@ -21,7 +21,6 @@ _(Ajusta esto según si lo hiciste solo o en equipo)_
 
 - **Frontend:** React, JavaScript, HTML5, CSS3
 - **Backend:** Prolog
-- **[Middleware/API]**: [Menciona cómo conectaste React y Prolog. ¿Fue con un servidor de Node.js/Express que ejecutaba el script de Prolog? ¿O una herramienta específica de Prolog?]
 - **Control de Versiones:** Git
 
 ---
